@@ -28,4 +28,9 @@ public class Person {
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
 	}
+	
+	public String toString() {
+		return "First name: " + this.firstName
+				+ " Last name: " + this.lastName;
+	}
 }
