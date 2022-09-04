@@ -13,11 +13,13 @@ public class PersonProcessor implements ItemProcessor<Person, Person> {
 	@Override
 	public Person process(Person item) throws Exception {
 		logger.debug("Processing person: " + item);
-		Person modified = new Person(
-				item.getFirstName().toUpperCase(),
-				item.getLastName().toUpperCase());
+		
+		//build a new/modified Person
+		Person modified = new Person.PersonBuilder()
+				.withFirstname(item.getFirstName().toUpperCase())
+				.withLastname(item.getLastName().toUpperCase())
+				.build();
 		
 		return modified;
 	}
-	
 }
