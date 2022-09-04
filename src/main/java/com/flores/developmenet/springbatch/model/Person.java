@@ -5,32 +5,45 @@ public class Person {
 	private String firstName;
 	private String lastName;
 	
-	public Person() {
-	}
-	
-	public Person(String first, String last) {
-		this.firstName = first;
-		this.lastName = last;
+	private Person(PersonBuilder builder) {
+		this.firstName = builder.firstname;
+		this.lastName = builder.lastname;
 	}
 
 	public String getFirstName() {
 		return firstName;
 	}
 
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
-
 	public String getLastName() {
 		return lastName;
-	}
-
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
 	}
 	
 	public String toString() {
 		return "First name: " + this.firstName
 				+ " Last name: " + this.lastName;
+	}
+	
+	public static class PersonBuilder {
+		
+		private String firstname;
+		private String lastname;
+	
+		public PersonBuilder() {
+			
+		}
+		
+		public PersonBuilder withFirstname(String first) {
+			this.firstname = first;
+			return this;
+		}
+		
+		public PersonBuilder withLastname(String last) {
+			this.lastname = last;
+			return this;
+		}
+		
+		public Person build() {
+			return new Person(this);
+		}
 	}
 }
