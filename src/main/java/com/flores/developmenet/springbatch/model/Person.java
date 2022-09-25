@@ -5,6 +5,23 @@ public class Person {
 	private String firstName;
 	private String lastName;
 	
+	public Person(String firstname, String lastname) {
+		this.firstName = firstname;
+		this.lastName = lastname;
+	}
+
+	public Person() {
+		
+	}
+	
+	public void setFirstName(String firstname) {
+		this.firstName = firstname;
+	}
+	
+	public void setLastName(String lastname) {
+		this.lastName = lastname;
+	}
+
 	private Person(PersonBuilder builder) {
 		this.firstName = builder.firstname;
 		this.lastName = builder.lastname;
