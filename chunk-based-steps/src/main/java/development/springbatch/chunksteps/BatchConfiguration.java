@@ -10,7 +10,9 @@ import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.batch.item.file.builder.FlatFileItemReaderBuilder;
+import org.springframework.batch.item.file.builder.FlatFileItemWriterBuilder;
 import org.springframework.batch.item.file.mapping.PassThroughLineMapper;
+import org.springframework.batch.item.file.transform.PassThroughLineAggregator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -58,9 +60,9 @@ public class BatchConfiguration {
 		final String STEP_NAME = "Step1";
 		return stepBuilder.get(STEP_NAME)
 				.chunk(CHUNK_SIZE)
-				.reader(reader())
+				.reader(reader(null))	//value will be set via late-binding
 				.processor(processor())
-				.writer(writer())
+				.writer(writer(null))	//value will be set via late-binding
 				.build();
 	}
 
@@ -70,7 +72,12 @@ public class BatchConfiguration {
 	}
 	
 	@Bean
-	private ItemWriter<?> writer() {
-		return null;
+	@StepScope
+	private ItemWriter<?> writer(@Value("#{outputFile}") Resource outputFile) {
+		return new FlatFileItemWriterBuilder<String>()
+				.name("itemWriter")
+				.resource(outputFile)
+				.lineAggregator(new PassThroughLineAggregator<>())
+				.build();
 	}
 }
