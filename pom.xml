@@ -18,6 +18,7 @@
 	
 	<modules>
 		<module>bean-wrapper-jdbc-template</module>
+		<module>chunk-based-steps</module>
 	</modules>
 	
 	<properties>
