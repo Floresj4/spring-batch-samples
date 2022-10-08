@@ -39,7 +39,7 @@ public class BatchConfiguration {
 	 */
 	@Bean
 	@StepScope
-	private ItemReader<?> reader(@Value("#{inputFile}") Resource inputFile) {
+	public ItemReader<String> reader(@Value("#{inputFile}") Resource inputFile) {
 		return new FlatFileItemReaderBuilder<String>()
 				.name("itemReader1")
 				.resource(inputFile)
@@ -59,7 +59,7 @@ public class BatchConfiguration {
 	public Step step() {
 		final String STEP_NAME = "Step1";
 		return stepBuilder.get(STEP_NAME)
-				.chunk(CHUNK_SIZE)
+				.<String, String>chunk(CHUNK_SIZE)
 				.reader(reader(null))	//value will be set via late-binding
 				.processor(processor())
 				.writer(writer(null))	//value will be set via late-binding
@@ -67,13 +67,13 @@ public class BatchConfiguration {
 	}
 
 	@Bean
-	private ItemProcessor processor() {
+	private ItemProcessor<String, String> processor() {
 		return null;
 	}
 	
 	@Bean
 	@StepScope
-	private ItemWriter<?> writer(@Value("#{outputFile}") Resource outputFile) {
+	private ItemWriter<String> writer(@Value("#{outputFile}") Resource outputFile) {
 		return new FlatFileItemWriterBuilder<String>()
 				.name("itemWriter")
 				.resource(outputFile)
