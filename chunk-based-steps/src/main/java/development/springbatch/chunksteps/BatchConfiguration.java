@@ -7,8 +7,8 @@ import org.springframework.batch.core.configuration.annotation.JobBuilderFactory
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.item.ItemProcessor;
-import org.springframework.batch.item.ItemReader;
-import org.springframework.batch.item.ItemWriter;
+import org.springframework.batch.item.ItemStreamReader;
+import org.springframework.batch.item.ItemStreamWriter;
 import org.springframework.batch.item.file.builder.FlatFileItemReaderBuilder;
 import org.springframework.batch.item.file.builder.FlatFileItemWriterBuilder;
 import org.springframework.batch.item.file.mapping.PassThroughLineMapper;
@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 
 @Configuration
@@ -39,10 +40,12 @@ public class BatchConfiguration {
 	 */
 	@Bean
 	@StepScope
-	public ItemReader<String> reader(@Value("#{inputFile}") Resource inputFile) {
+	public ItemStreamReader<String> reader(@Value("#{jobParameters['inputFile']}") String inputFile) {
+		Resource input = new FileSystemResource(inputFile);
+		
 		return new FlatFileItemReaderBuilder<String>()
 				.name("itemReader1")
-				.resource(inputFile)
+				.resource(input)
 				.lineMapper(new PassThroughLineMapper())
 				.build();
 	}
@@ -61,22 +64,23 @@ public class BatchConfiguration {
 		return stepBuilder.get(STEP_NAME)
 				.<String, String>chunk(CHUNK_SIZE)
 				.reader(reader(null))	//value will be set via late-binding
-				.processor(processor())
 				.writer(writer(null))	//value will be set via late-binding
 				.build();
 	}
 
 	@Bean
-	private ItemProcessor<String, String> processor() {
+	public ItemProcessor<String, String> processor() {
 		return null;
 	}
 	
 	@Bean
 	@StepScope
-	private ItemWriter<String> writer(@Value("#{outputFile}") Resource outputFile) {
+	public ItemStreamWriter<String> writer(@Value("#{jobParameters['outputFile']}") String outputFile) {
+		Resource output = new FileSystemResource(outputFile);
+		
 		return new FlatFileItemWriterBuilder<String>()
 				.name("itemWriter")
-				.resource(outputFile)
+				.resource(output)
 				.lineAggregator(new PassThroughLineAggregator<>())
 				.build();
 	}
