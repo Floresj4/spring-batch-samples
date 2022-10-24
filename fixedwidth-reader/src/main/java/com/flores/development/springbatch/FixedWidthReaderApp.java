@@ -19,6 +19,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 
+import com.flores.development.springbatch.model.Customer;
+
 
 @Configuration
 @EnableBatchProcessing

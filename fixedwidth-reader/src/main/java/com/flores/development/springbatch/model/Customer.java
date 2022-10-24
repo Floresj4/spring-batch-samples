@@ -1,4 +1,4 @@
-package com.flores.development.springbatch;
+package com.flores.development.springbatch.model;
 
 import lombok.Data;
 
