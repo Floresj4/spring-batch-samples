@@ -1,4 +1,4 @@
-package com.flores.developmenet.springbatch.model;
+package com.flores.development.springbatch.model;
 
 public class Person {
 

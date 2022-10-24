@@ -1,4 +1,4 @@
-package com.flores.developmenet.springbatch;
+package com.flores.development.springbatch;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

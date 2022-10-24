@@ -1,4 +1,4 @@
-package com.flores.developmenet.springbatch.config;
+package com.flores.development.springbatch.config;
 
 import javax.sql.DataSource;
 
@@ -20,8 +20,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 
-import com.flores.developmenet.springbatch.PersonProcessor;
-import com.flores.developmenet.springbatch.model.Person;
+import com.flores.development.springbatch.PersonProcessor;
+import com.flores.development.springbatch.model.Person;
 
 @Configuration
 @EnableBatchProcessing
