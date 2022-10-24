@@ -19,6 +19,9 @@ import org.springframework.core.io.Resource;
 
 import com.flores.development.springbatch.model.Customer;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Configuration
 @EnableBatchProcessing
 public class FixedWidthReaderConfig {
@@ -28,10 +31,14 @@ public class FixedWidthReaderConfig {
     
     @Autowired
     public StepBuilderFactory stepBuilder;
-    
+
+    public static final int CHUNK_SIZE = 2;
+
     @Bean
     @StepScope
     public FlatFileItemReader<Customer> reader(@Value("#{jobParameters['inputFile']}") String inputFile) {
+    	log.debug("Initializing reader with input source {}", inputFile);
+
     	Resource resource = new FileSystemResource("./src/main/resources/customers.csv");
     	
     	//column name and field lengths
@@ -55,14 +62,17 @@ public class FixedWidthReaderConfig {
     @Bean
     @StepScope
     public ItemWriter<Customer> writer() {
-    	//just write them to standard out for now
-    	return (items) -> items.forEach(System.out::println);
+    	log.debug("Initializing logging writer");
+
+    	return (items) -> items.forEach(i -> log.debug(i.toString()));
     }
     
     @Bean
     public Step fixedWidthReadingStep() {
+    	log.debug("Initializing fixed width reading step.  Chunk size: {}");
+
     	return stepBuilder.get("fixed-width-reading-step")
-    			.<Customer, Customer>chunk(5)
+    			.<Customer, Customer>chunk(CHUNK_SIZE)
     			.reader(reader(null))
     			.writer(writer())
     			.build();
@@ -70,6 +80,8 @@ public class FixedWidthReaderConfig {
 
     @Bean
     public Job sampleBatchJob() {
+    	log.debug("Initializing batch job for fixed width file reading");
+
     	return jobBuilder.get("sample-batch-job")
     			.flow(fixedWidthReadingStep())
     			.end()
