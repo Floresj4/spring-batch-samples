@@ -23,10 +23,10 @@ import org.springframework.core.io.Resource;
 @Configuration
 @EnableBatchProcessing
 @SpringBootApplication
-public class App {
+public class FixedWidthReaderApp {
 	
     public static void main(String[] args) {
-        SpringApplication.run(App.class, args);
+        SpringApplication.run(FixedWidthReaderApp.class, args);
     }
     
     @Autowired

@@ -4,9 +4,9 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class ChunkBasedSteps {
+public class BeanWrapperJdbcApp {
 
 	public static void main(String args[]) {
-		SpringApplication.run(ChunkBasedSteps.class, args);
+		SpringApplication.run(BeanWrapperJdbcApp.class, args);
 	}
 }
