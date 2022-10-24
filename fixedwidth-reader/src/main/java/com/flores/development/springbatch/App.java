@@ -16,6 +16,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
 
 
 @Configuration
@@ -36,17 +38,19 @@ public class App {
     @Bean
     @StepScope
     public FlatFileItemReader<Customer> reader(@Value("#{jobParameters['inputFile']}") String inputFile) {
+    	Resource resource = new FileSystemResource("./src/main/resources/customers.csv");
     	
     	//column name and field lengths
     	String[] columnNames = new String[] {"name", "address", "phone"};
     	Range[] ranges = new Range[]{
-    			new Range(0, 15),
+    			new Range(1, 15),
     			new Range(15, 41),
-    			new Range(42, 55)
+    			new Range(42, 53)
     	};
     	
     	return new FlatFileItemReaderBuilder<Customer>()
     			.name("custom-reader")
+    			.resource(resource)
     			.fixedLength()
     			.columns(ranges)
     			.names(columnNames)
