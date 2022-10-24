@@ -25,7 +25,7 @@ import com.flores.development.springbatch.model.Person;
 
 @Configuration
 @EnableBatchProcessing
-public class BatchConfiguration {
+public class BeanWrapperJdbcConfig {
 
 	@Autowired
 	private JobBuilderFactory jobBuilder;
