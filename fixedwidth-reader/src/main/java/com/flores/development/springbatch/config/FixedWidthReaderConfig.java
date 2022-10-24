@@ -1,4 +1,4 @@
-package com.flores.development.springbatch;
+package com.flores.development.springbatch.config;
 
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -12,8 +12,6 @@ import org.springframework.batch.item.file.builder.FlatFileItemReaderBuilder;
 import org.springframework.batch.item.file.transform.Range;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.FileSystemResource;
@@ -21,17 +19,11 @@ import org.springframework.core.io.Resource;
 
 import com.flores.development.springbatch.model.Customer;
 
-
 @Configuration
 @EnableBatchProcessing
-@SpringBootApplication
-public class FixedWidthReaderApp {
-	
-    public static void main(String[] args) {
-        SpringApplication.run(FixedWidthReaderApp.class, args);
-    }
+public class FixedWidthReaderConfig {
     
-    @Autowired
+	@Autowired
     public JobBuilderFactory jobBuilder;
     
     @Autowired
