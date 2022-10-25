@@ -1,11 +1,7 @@
 package com.flores.development.springbatch.config;
 
-import org.springframework.batch.core.ExitStatus;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
-import org.springframework.batch.core.StepExecution;
-import org.springframework.batch.core.annotation.AfterStep;
-import org.springframework.batch.core.annotation.BeforeStep;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
@@ -21,6 +17,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 
+import com.flores.development.springbatch.listeners.LoggingChunkListener;
+import com.flores.development.springbatch.listeners.LoggingJobExecutionListener;
+import com.flores.development.springbatch.listeners.LoggingStepExecutionListener;
 import com.flores.development.springbatch.model.Customer;
 
 import lombok.extern.slf4j.Slf4j;
@@ -89,6 +88,7 @@ public class FixedWidthReaderConfig {
     	log.debug("Initializing batch job for fixed width file reading");
 
     	return jobBuilder.get("sample-batch-job")
+    			.listener(new LoggingJobExecutionListener())
     			.flow(fixedWidthReadingStep())
     			.end()
     			.build();
