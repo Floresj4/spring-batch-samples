@@ -1,7 +1,11 @@
 package com.flores.development.springbatch.config;
 
+import org.springframework.batch.core.ExitStatus;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
+import org.springframework.batch.core.StepExecution;
+import org.springframework.batch.core.annotation.AfterStep;
+import org.springframework.batch.core.annotation.BeforeStep;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
@@ -73,8 +77,10 @@ public class FixedWidthReaderConfig {
 
     	return stepBuilder.get("fixed-width-reading-step")
     			.<Customer, Customer>chunk(CHUNK_SIZE)
-    			.reader(reader(null))
+    			.reader(reader(null))	//null placeholder for late-bind jobParam
     			.writer(writer())
+    			.listener(new LoggingStepExecutionListener())
+    			.listener(new LoggingChunkListener())
     			.build();
     }
 
