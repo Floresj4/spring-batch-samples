@@ -1,6 +1,5 @@
 package com.flores.development.springbatch.listeners;
 
-import org.springframework.batch.core.StepExecution;
 import org.springframework.batch.core.annotation.AfterChunk;
 import org.springframework.batch.core.annotation.AfterChunkError;
 import org.springframework.batch.core.annotation.BeforeChunk;
@@ -23,6 +22,6 @@ public class LoggingChunkListener {
 
 	@AfterChunkError
 	public void afterChunkError(ChunkContext context) {
-		
+		log.debug("After chunk error...");
 	}
 }
