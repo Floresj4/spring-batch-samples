@@ -84,7 +84,7 @@ public class FixedWidthReaderConfig {
     }
 
     @Bean
-    public Job sampleBatchJob() {
+    public Job fixedWidthBatchJob() {
     	log.debug("Initializing batch job for fixed width file reading");
 
     	return jobBuilder.get("sample-batch-job")
