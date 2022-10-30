@@ -5,7 +5,7 @@ import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
-import org.springframework.batch.core.configuration.annotation.StepScope;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -16,15 +16,16 @@ import lombok.extern.slf4j.Slf4j;
 @EnableBatchProcessing
 public class CustomRecordParsingConfig {
 
+	@Autowired
 	private JobBuilderFactory jobBuilder;
 	
+	@Autowired
 	private StepBuilderFactory stepBuilder;
 
 	//this would be externalized in an ideal scenario
 	private static final int CHUNK_SIZE = 10;
 	
 	@Bean
-	@StepScope
 	public Step customRecordParsingStep() {
 		log.debug("Initializing custom record parsing step");
 		
@@ -34,7 +35,6 @@ public class CustomRecordParsingConfig {
 	}
 	
 	@Bean
-	@StepScope
 	public Job customRecordParsingJob() {
 		log.debug("Initializing Custom Record Parsing job...");
 		
