@@ -5,9 +5,18 @@ import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
+import org.springframework.batch.core.configuration.annotation.StepScope;
+import org.springframework.batch.item.ItemWriter;
+import org.springframework.batch.item.file.FlatFileItemReader;
+import org.springframework.batch.item.file.builder.FlatFileItemReaderBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
+
+import com.flores.development.springbatch.model.Employee;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -26,11 +35,39 @@ public class CustomRecordParsingConfig {
 	private static final int CHUNK_SIZE = 10;
 	
 	@Bean
+	@StepScope
+	public FlatFileItemReader<Employee> employeeReader(@Value("#{jobParameters['inputFile']}") String inputFile) {
+		Resource resource = new FileSystemResource(inputFile);
+		
+		String fieldNames[] = new String[] {"id", "dept_id", "title", "name"};
+		
+		return new FlatFileItemReaderBuilder<Employee>()
+				.resource(resource)
+				.name("employeeReader")
+				.linesToSkip(1)		//skip the header row
+				.delimited()
+				.names(fieldNames)
+				.targetType(Employee.class)
+				.build();
+	}
+	
+	@Bean
+	@StepScope
+	public ItemWriter<Employee> employeeWriter() {
+		return (employees) -> {
+			//write the contents of a complete chunk
+			employees.forEach(e -> log.info(e.toString()));
+		};
+	}
+	
+	@Bean
 	public Step customRecordParsingStep() {
 		log.debug("Initializing custom record parsing step");
 		
 		return stepBuilder.get("CustomRecordParsingStep")
-				.chunk(CHUNK_SIZE)
+				.<Employee, Employee>chunk(CHUNK_SIZE)
+				.reader(employeeReader(null))	//null to account for late-bind inputFile
+				.writer(employeeWriter())
 				.build();
 	}
 	
