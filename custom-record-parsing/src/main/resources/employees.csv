@@ -1,5 +1,5 @@
-id,dept_id,title,name
-1,6542,developer,Jane Doe
-2,345,supervisor,Max Imum
-3,785,developer,Albert Undz
-4,6542,data science,Pheobe Rex
+id,dept_id,title,name,birth_date
+1,6542,developer,Jane Doe,20010325
+2,345,supervisor,Max Imum,19841208
+3,785,developer,Albert Undz,19710907
+4,6542,data science,Pheobe Rex,19930227
