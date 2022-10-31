@@ -1,7 +1,6 @@
 package com.flores.development.springbatch.model;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 import lombok.Getter;
 
