@@ -45,9 +45,11 @@ public class CustomRecordParsingConfig {
 				.resource(resource)
 				.name("employeeReader")
 				.linesToSkip(1)		//skip the header row
-				.delimited()
-				.names(fieldNames)
-				.targetType(Employee.class)
+				.lineTokenizer(new EmployeeLineTokenizer())
+				.fieldSetMapper(new EmployeeFieldSetMapper())
+//				.delimited()			//spring-managed approach to simple delimited files
+//				.names(fieldNames)
+//				.targetType(Employee.class)
 				.build();
 	}
 	

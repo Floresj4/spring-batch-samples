@@ -17,7 +17,9 @@ import lombok.extern.slf4j.Slf4j;
 public class EmployeeLineTokenizer implements LineTokenizer {
 
 	private static final String DELIMITER = ",";
-	private static final String[] FIELD_NAMES = new String[] {"id", "dept_id", "title", "name"};
+	private static final String[] FIELD_NAMES = new String[] {
+			"id", "dept_id", "title", "name", "birth_date"
+			};
 
 	@Override
 	public FieldSet tokenize(String line) {
