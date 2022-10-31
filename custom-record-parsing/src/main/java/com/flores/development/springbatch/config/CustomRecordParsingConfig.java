@@ -38,8 +38,9 @@ public class CustomRecordParsingConfig {
 	@StepScope
 	public FlatFileItemReader<Employee> employeeReader(@Value("#{jobParameters['inputFile']}") String inputFile) {
 		Resource resource = new FileSystemResource(inputFile);
-		
-		String fieldNames[] = new String[] {"id", "dept_id", "title", "name"};
+
+		//fields used in the spring-managed delimited() reader
+//		String fieldNames[] = new String[] {"id", "dept_id", "title", "name"};
 		
 		return new FlatFileItemReaderBuilder<Employee>()
 				.resource(resource)
