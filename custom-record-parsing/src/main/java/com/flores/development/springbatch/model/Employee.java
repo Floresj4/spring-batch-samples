@@ -1,5 +1,6 @@
 package com.flores.development.springbatch.model;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 import lombok.Getter;
@@ -21,7 +22,7 @@ public class Employee {
 	private final String name;
 	private final String title;
 
-	private final Date birthDate;
+	private final LocalDate birthDate;
 	
 	private Employee(EmployeeBuilder e) {
 		id = e.id;
@@ -49,7 +50,7 @@ public class Employee {
 		private String name;
 		private String title;
 
-		private Date birthDate;
+		private LocalDate birthDate;
 		
 		public EmployeeBuilder withId(int id) {
 			this.id = id;
@@ -76,7 +77,7 @@ public class Employee {
 			return this;
 		}
 		
-		public EmployeeBuilder withBirthDate(Date birthDate) {
+		public EmployeeBuilder withBirthDate(LocalDate birthDate) {
 			this.birthDate = birthDate;
 			return this;
 		}
