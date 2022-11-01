@@ -18,6 +18,8 @@ import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 
 import com.flores.development.springbatch.model.Employee;
+import com.flores.development.springbatch.parsing.EmployeeFieldSetMapper;
+import com.flores.development.springbatch.parsing.EmployeeLineTokenizer;
 
 import lombok.extern.slf4j.Slf4j;
 

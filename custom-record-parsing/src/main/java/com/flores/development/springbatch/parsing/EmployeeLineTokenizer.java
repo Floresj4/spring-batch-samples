@@ -1,4 +1,4 @@
-package com.flores.development.springbatch.config;
+package com.flores.development.springbatch.parsing;
 
 import org.springframework.batch.item.file.transform.DefaultFieldSetFactory;
 import org.springframework.batch.item.file.transform.FieldSet;
