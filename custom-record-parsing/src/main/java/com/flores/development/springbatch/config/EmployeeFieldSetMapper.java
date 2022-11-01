@@ -11,7 +11,7 @@ import com.flores.development.springbatch.model.Employee;
 
 public class EmployeeFieldSetMapper implements FieldSetMapper<Employee>{
 
-	private static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("YYYYmmdd");
+	private static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMdd");
 	
 	@Override
 	public Employee mapFieldSet(FieldSet fieldSet) throws BindException {
