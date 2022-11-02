@@ -30,6 +30,10 @@ public class WorkItem {
 		
 		private String title;
 
+		private WorkItemBuilder() {
+			
+		}
+		
 		public WorkItemBuilder withId(int id) {
 			this.id = id;
 			return this;
