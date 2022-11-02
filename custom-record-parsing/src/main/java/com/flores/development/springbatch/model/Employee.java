@@ -1,6 +1,8 @@
 package com.flores.development.springbatch.model;
 
 import java.time.LocalDate;
+import java.util.Collections;
+import java.util.List;
 
 import lombok.Getter;
 
@@ -23,6 +25,8 @@ public class Employee {
 
 	private final LocalDate birthDate;
 	
+	private final List<WorkItem> items;
+	
 	private Employee(EmployeeBuilder e) {
 		id = e.id;
 		deptId = e.deptId;
@@ -30,6 +34,7 @@ public class Employee {
 		name = e.name;
 		title = e.title;
 		birthDate = e.birthDate;
+		items = e.items;
 	}
 	
 	public static EmployeeBuilder builder() {
@@ -49,7 +54,13 @@ public class Employee {
 		private String name;
 		private String title;
 
+		private List<WorkItem> items;
+		
 		private LocalDate birthDate;
+		
+		private EmployeeBuilder() {
+			items = Collections.emptyList();
+		}
 		
 		public EmployeeBuilder withId(int id) {
 			this.id = id;
@@ -80,7 +91,12 @@ public class Employee {
 			this.birthDate = birthDate;
 			return this;
 		}
-		
+
+		public EmployeeBuilder withItems(List<WorkItem> items) {
+			this.items = items;
+			return this;
+		}
+
 		public Employee build() {
 			return new Employee(this);
 		}
