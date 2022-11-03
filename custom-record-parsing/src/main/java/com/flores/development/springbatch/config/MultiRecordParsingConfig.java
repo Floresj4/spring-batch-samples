@@ -19,7 +19,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
 
+import com.flores.development.springbatch.EmployeeFileReader;
 import com.flores.development.springbatch.model.Employee;
 import com.flores.development.springbatch.parsing.EmployeeBuilderFieldSetMapper;
 import com.flores.development.springbatch.parsing.WorkItemFieldSetMapper;
@@ -40,16 +43,23 @@ public class MultiRecordParsingConfig {
 	
 	@Bean
 	@StepScope
-	public FlatFileItemReader<Employee> employeeReader(@Value("#{jobParameters['inputFile']") String inputFile) {
+	public FlatFileItemReader<Object> employeeReader(@Value("#{jobParameters['inputFile']") String inputFile) {
 		log.info("Initializing multi-line employee reader");
 
-		return new FlatFileItemReaderBuilder<Employee>()
+		Resource resource = new FileSystemResource(inputFile);
+		
+		return new FlatFileItemReaderBuilder<Object>()
 				.name("employeeReader")
-				.lineMapper(null)
-				.fieldSetMapper(null)
+				.lineMapper(compositeLineMapper())
+				.resource(resource)
 				.build();
 	}
 
+	@Bean
+	public EmployeeFileReader employeeFileReader() {
+		return new EmployeeFileReader(employeeReader(null));
+	}
+	
 	@Bean
 	public PatternMatchingCompositeLineMapper<Object> compositeLineMapper() {
 		log.info("Initializing composite line mapper");
