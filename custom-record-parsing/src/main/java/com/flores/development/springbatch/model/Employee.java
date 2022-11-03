@@ -92,7 +92,7 @@ public class Employee {
 			return this;
 		}
 
-		public EmployeeBuilder withItems(List<WorkItem> items) {
+		public EmployeeBuilder withWorkItems(List<WorkItem> items) {
 			this.items = items;
 			return this;
 		}
