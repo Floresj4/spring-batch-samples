@@ -43,8 +43,8 @@ public class MultiRecordParsingConfig {
 	
 	@Bean
 	@StepScope
-	public FlatFileItemReader<Object> employeeReader(@Value("#{jobParameters['inputFile']") String inputFile) {
-		log.info("Initializing multi-line employee reader");
+	public FlatFileItemReader<Object> employeeItemReader(@Value("#{jobParameters['inputFile']") String inputFile) {
+		log.info("Initializing multi-line employee item reader");
 
 		Resource resource = new FileSystemResource(inputFile);
 		
@@ -57,7 +57,7 @@ public class MultiRecordParsingConfig {
 
 	@Bean
 	public EmployeeFileReader employeeFileReader() {
-		return new EmployeeFileReader(employeeReader(null));
+		return new EmployeeFileReader(employeeItemReader(null));
 	}
 	
 	@Bean
@@ -105,8 +105,8 @@ public class MultiRecordParsingConfig {
 	
 	@Bean
 	@StepScope
-	public ItemWriter<Employee> employeeWriter() {
-		log.info("Initializing employee writer");
+	public ItemWriter<Employee> employeeItemWriter() {
+		log.info("Initializing employee item writer");
 		
 		return (employees) -> {
 			employees.forEach(e -> log.info(e.toString()));
