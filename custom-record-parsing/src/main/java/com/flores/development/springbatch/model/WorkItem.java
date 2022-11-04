@@ -1,6 +1,7 @@
 package com.flores.development.springbatch.model;
 
 import lombok.Getter;
+import lombok.ToString;
 
 /**
  * Simple work item consisting of an id
@@ -9,6 +10,7 @@ import lombok.Getter;
  * @author jason
  */
 @Getter
+@ToString
 public class WorkItem {
 
 	private final int id;
