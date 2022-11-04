@@ -1,4 +1,4 @@
-package com.flores.development.springbatch;
+package com.flores.development.springbatch.reader;
 
 import java.util.ArrayList;
 import java.util.List;
