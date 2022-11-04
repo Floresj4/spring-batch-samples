@@ -1,14 +1,14 @@
-EMP,1,6542,Developer,Jane Doe
+EMP,1,6542,Developer,Jane Doe,19930103
 WRK,4345,Make it work
 WRK,4346,Do all the things
-EMP,2,345,Supervisor,Max Imum
+EMP,2,345,Supervisor,Max Imum,20010417
 WRK,4347,Solve a problem
-EMP,3,785,Developer,Albert Undz
+EMP,3,785,Developer,Albert Undz,19841222
 WRK,4348,Read a book
-EMP,4,6542,Data Scientist,Pheobe Rex
+EMP,4,6542,Data Scientist,Pheobe Rex,19900909
 WRK,54522,Science things
-EMP,92,6542,Developer,Steve Acosta
-EMP,93,785,Analyst,Jeff Marshall
+EMP,92,6542,Developer,Steve Acosta,20000729
+EMP,93,785,Analyst,Jeff Marshall,19730516
 WRK,54523,Review some files
 WRK,54524,Upload some files
 WRK,54528,Update dashboard
