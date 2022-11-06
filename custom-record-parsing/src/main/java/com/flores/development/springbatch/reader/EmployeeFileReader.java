@@ -40,6 +40,11 @@ public class EmployeeFileReader implements ItemStreamReader<Employee> {
 
 		if(currentItem == null) {
 			currentItem = reader.read();
+			
+			//reader returned no more records
+			if(currentItem == null) {
+				return null;
+			}
 		}
 		
 		//assign an employee to build and reset state to look ahead

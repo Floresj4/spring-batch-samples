@@ -3,6 +3,8 @@ package com.flores.development.springbatch.config;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.batch.core.Job;
+import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
@@ -22,10 +24,10 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 
-import com.flores.development.springbatch.EmployeeFileReader;
 import com.flores.development.springbatch.model.Employee;
 import com.flores.development.springbatch.parsing.EmployeeBuilderFieldSetMapper;
 import com.flores.development.springbatch.parsing.WorkItemFieldSetMapper;
+import com.flores.development.springbatch.reader.EmployeeFileReader;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -36,14 +38,14 @@ import lombok.extern.slf4j.Slf4j;
 public class MultiRecordParsingConfig {
 
 	@Autowired
-	public JobBuilderFactory jobFactory;
+	public JobBuilderFactory jobBuilder;
 	
 	@Autowired
-	public StepBuilderFactory stepFactory;
+	public StepBuilderFactory stepBuilder;
 	
 	@Bean
 	@StepScope
-	public FlatFileItemReader<Object> employeeItemReader(@Value("#{jobParameters['inputFile']") String inputFile) {
+	public FlatFileItemReader<Object> employeeItemReader(@Value("#{jobParameters['inputFile']}") String inputFile) {
 		log.info("Initializing multi-line employee item reader");
 
 		Resource resource = new FileSystemResource(inputFile);
@@ -87,7 +89,7 @@ public class MultiRecordParsingConfig {
 	public LineTokenizer employeeTokenizer() {
 		DelimitedLineTokenizer employeeTokenizer = new DelimitedLineTokenizer();
 		employeeTokenizer.setNames(new String[] {
-				"prefix", "id", "dept_id", "title", "name"
+				"prefix", "id", "dept_id", "title", "name", "birth_date"
 		});
 		
 		return employeeTokenizer;
@@ -111,5 +113,21 @@ public class MultiRecordParsingConfig {
 		return (employees) -> {
 			employees.forEach(e -> log.info(e.toString()));
 		};
+	}
+
+	@Bean
+	public Step multiRecordParsingStep() {
+		return stepBuilder.get("multiRecordParsingStep")
+				.<Employee, Employee>chunk(2)
+				.reader(employeeFileReader())
+				.writer(employeeItemWriter())
+				.build();
+	}
+	@Bean
+	public Job multiRecordParsingJob() {
+		return jobBuilder.get("MultiRecordParsingJob")
+				.flow(multiRecordParsingStep())
+				.end()
+				.build();
 	}
 }
