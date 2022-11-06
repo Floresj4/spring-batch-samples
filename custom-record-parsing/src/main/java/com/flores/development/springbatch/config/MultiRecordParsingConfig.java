@@ -57,7 +57,6 @@ public class MultiRecordParsingConfig {
 				.build();
 	}
 
-	@Bean
 	public EmployeeFileReader employeeFileReader() {
 		return new EmployeeFileReader(employeeItemReader(null));
 	}
@@ -123,6 +122,7 @@ public class MultiRecordParsingConfig {
 				.writer(employeeItemWriter())
 				.build();
 	}
+
 	@Bean
 	public Job multiRecordParsingJob() {
 		return jobBuilder.get("MultiRecordParsingJob")

@@ -53,7 +53,7 @@ public class EmployeeFileReader implements ItemStreamReader<Employee> {
 
 		List<WorkItem> workItems = new ArrayList<>();
 		while(peek() instanceof WorkItem) {
-			log.debug("Collecting workitem {} for employee", currentItem);
+			log.debug("Collecting {}...", currentItem);
 
 			//the current item assigned in peek would be a workitem here
 			WorkItem workItem = (WorkItem) currentItem;
