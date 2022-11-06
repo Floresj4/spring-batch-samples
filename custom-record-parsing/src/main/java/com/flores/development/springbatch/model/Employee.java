@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 
 import lombok.Getter;
+import lombok.ToString;
 
 /**
  * Employee model.  Only using lombok.getter annotation
@@ -14,6 +15,7 @@ import lombok.Getter;
  * @author jason
  */
 @Getter
+@ToString
 public class Employee {
 	
 	private final int id;
