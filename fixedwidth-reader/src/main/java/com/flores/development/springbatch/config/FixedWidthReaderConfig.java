@@ -42,7 +42,7 @@ public class FixedWidthReaderConfig {
     public FlatFileItemReader<Customer> reader(@Value("#{jobParameters['inputFile']}") String inputFile) {
     	log.debug("Initializing reader with input source {}", inputFile);
 
-    	Resource resource = new FileSystemResource("./src/main/resources/customers.csv");
+    	Resource resource = new FileSystemResource(inputFile);
     	
     	//column name and field lengths
     	String[] columnNames = new String[] {"name", "address", "phone"};
