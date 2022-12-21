@@ -6,10 +6,10 @@ The implementation of each tokenizer and mapper is straight and just exercises t
 
 ###  Executions
 
-`java -Dspring.profiles.active=single inputFile=./src/main/resources/employees.csv`
+`java -Dspring.profiles.active=single inputFile=./input-files/employees.csv`
 
 Executes the project against the single record file format.
 
-`java -Dspring.profiles.active=multi inputFile=./src/main/resources/employees-w-workitems.csv`
+`java -Dspring.profiles.active=multi inputFile=./input-files/employees-w-workitems.csv`
 
 Executes the project against the multi-record file format.
