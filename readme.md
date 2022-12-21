@@ -6,3 +6,7 @@ Working through various Spring Batch scenarios.
 - [Chunk-based steps](./chunk-based-steps/)
 - [Custom record parsing](./custom-record-parsing/)
 - [Fixed width reader](./fixedwidth-reader/)
+
+### input-files
+
+The input files used throughout this project.
