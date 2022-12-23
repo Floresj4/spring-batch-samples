@@ -64,7 +64,7 @@ public class BatchConfig {
 				.build();
 	}
 	
-	private File getOutputFile() throws FileNotFoundException {
+	private File getOutputFile() throws Exception {
 		File input = new File(inputFile);
 		if(!input.exists()) {
 			throw new FileNotFoundException("Input file does not exist.");
