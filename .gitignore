@@ -5,4 +5,4 @@
 .settings/
 target/
 
-chunk-based-steps/chunk-based-out.csv
+*-out.csv

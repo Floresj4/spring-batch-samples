@@ -21,7 +21,8 @@
 		<module>chunk-based-steps</module>
 		<module>fixedwidth-reader</module>
     	<module>custom-record-parsing</module>
-  </modules>
+    	<module>container-packaging</module>
+	</modules>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
