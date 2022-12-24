@@ -9,6 +9,10 @@
 
 	<artifactId>container-packaging</artifactId>
 
+	<properties>
+		<maven.compiler.target>1.8</maven.compiler.target>
+	</properties>
+	
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -19,9 +23,19 @@
 	<build>
 		<plugins>
 			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+			</plugin>
+			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<version>3.0.1</version>
+				<configuration>
+                    <image>
+                        <env>
+                            <BP_JVM_VERSION>8</BP_JVM_VERSION>
+                        </env>
+                    </image>
+                </configuration>
 				<executions>
 					<execution>
 						<goals>
