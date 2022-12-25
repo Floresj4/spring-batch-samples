@@ -19,6 +19,11 @@
 				<configuration>
 					<image>
 						<name>${project.artifactId}:latest</name>
+						<env>
+							<!-- JVM can be inferred from maven.compiler.target or other
+							locations, but being specific can be helpful -->
+                            <BP_JVM_VERSION>8</BP_JVM_VERSION>
+                        </env>
 					</image>
 				</configuration>
 			</plugin>
