@@ -1,6 +1,6 @@
 # Container packaging
 
-Package a SpringBoot application as an OCI container.
+Package a SpringBoot application as an [Open Container Initiutive](https://opencontainers.org/) (OCI) container.
 
 ### Build
 
