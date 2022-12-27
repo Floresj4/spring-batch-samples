@@ -1,10 +1,10 @@
 [
     {
         "id": "1",
-        "dept_id": "6542",
+        "deptId": "6542",
         "title": "Developer",
         "name": "Jane Doe",
-        "birth_date": "19930103",
+        "birthDate": "19930103",
         "work_items": [
             {
                 "id": "4345",
@@ -18,10 +18,10 @@
     },
     {
         "id": "2",
-        "dept_id": "345",
+        "deptId": "345",
         "title": "Supervisor",
         "name": "Max Imum",
-        "birth_date": "20010417",
+        "birthDate": "20010417",
         "work_items": [
             {
                 "id": "4347",
@@ -31,10 +31,10 @@
     },
     {
         "id": "3",
-        "dept_id": "785",
+        "deptId": "785",
         "title": "Developer",
         "name": "Albert Undz",
-        "birth_date": "19841222",
+        "birthDate": "19841222",
         "work_items": [
             {
                 "id": "4348",
@@ -44,10 +44,10 @@
     },
     {
         "id": "4",
-        "dept_id": "6542",
+        "deptId": "6542",
         "title": "Data Scientist",
         "name": "Pheobe Rex",
-        "birth_date": "19900909",
+        "birthDate": "19900909",
         "work_items": [
             {
                 "id": "54522",
@@ -57,9 +57,9 @@
     },
     {
         "id": "92",
-        "dept_id": "6542",
+        "deptId": "6542",
         "title": "Developer",
         "name": "Steve Acosta",
-        "birth_date": "20000729"
+        "birthDate": "20000729"
     }
 ]

@@ -18,10 +18,10 @@ def read_employees(input_file: str):
                 employee_data = line.split(',')
                 employee = {
                     'id': employee_data[1],
-                    'dept_id': employee_data[2],
+                    'deptId': employee_data[2],
                     'title': employee_data[3],
                     'name': employee_data[4],
-                    'birth_date': employee_data[5]
+                    'birthDate': employee_data[5]
                 }
 
             elif line.startswith('WRK'):
