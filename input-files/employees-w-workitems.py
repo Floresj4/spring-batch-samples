@@ -32,7 +32,7 @@ def read_employees(input_file: str):
                     'title': wrk_data[2]
                 }
 
-                key = 'work_items'
+                key = 'items'
                 if not key in employee:
                     employee[key] = []
                     
