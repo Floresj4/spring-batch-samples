@@ -10,6 +10,9 @@ Using a Spring BeanWrapperFieldSetMapper to convert flatfile data to a domain mo
 - [Container packaging](./container-packaging/)
 - [Custom record parsing](./custom-record-parsing/)
 - [Fixed width reader](./fixedwidth-reader/)
+- [Service trigger](./service-trigger/)
+
+Launch a batch processing job from a http request.
 
 
 ### input-files
