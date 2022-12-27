@@ -1,5 +1,5 @@
 spring:
-	batch:
-		job:
-			enabled: false
-		initialize-schema: always
+  batch:
+    job:
+      enabled: false
+    initialize-schema: always
