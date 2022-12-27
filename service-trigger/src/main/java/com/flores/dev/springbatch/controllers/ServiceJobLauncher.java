@@ -1,4 +1,4 @@
-package com.flores.dev.springbatch;
+package com.flores.dev.springbatch.controllers;
 
 import java.util.Properties;
 

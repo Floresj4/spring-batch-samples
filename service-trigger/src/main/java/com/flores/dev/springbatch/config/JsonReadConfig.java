@@ -39,7 +39,7 @@ public class JsonReadConfig {
 		jsonObjectReader.setMapper(new ObjectMapper());
 
 		return new JsonItemReaderBuilder<Employee>()
-				.name("Employee JSON object reader")
+				.name("EmployeeJsonReader")
 				.jsonObjectReader(jsonObjectReader)
 				.resource(resource)
 				.build();
@@ -54,7 +54,7 @@ public class JsonReadConfig {
 	@Bean
 	public Job serviceTriggerJob() {
 		return jobFactory
-				.get("Service Trigger Job")
+				.get("ServiceTriggerJob")
 				.flow(serviceTriggerStep())
 				.end()
 				.build();
@@ -63,7 +63,7 @@ public class JsonReadConfig {
 	@Bean
 	public Step serviceTriggerStep() {
 		return stepFactory
-				.get("Read JSON input")
+				.get("JsonReadStep")
 				.<Employee, Employee>chunk(3)
 				.reader(reader(null))		//use null when late-bound
 				.writer(writer())
