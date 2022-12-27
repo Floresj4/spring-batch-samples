@@ -18,7 +18,7 @@ public class Employee {
 	private String name;
 	private String deptId;
 	private String title;
-	private String dateOfBirth;
+	private String birthDate;
 	
 	private List<WorkItem> items = new ArrayList<>();
 }
