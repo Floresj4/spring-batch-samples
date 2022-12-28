@@ -1,0 +1,65 @@
+[
+    {
+        "id": "1",
+        "deptId": "6542",
+        "title": "Developer",
+        "name": "Jane Doe",
+        "birthDate": "19930103",
+        "items": [
+            {
+                "id": "4345",
+                "title": "Make it work"
+            },
+            {
+                "id": "4346",
+                "title": "Do all the things"
+            }
+        ]
+    },
+    {
+        "id": "2",
+        "deptId": "345",
+        "title": "Supervisor",
+        "name": "Max Imum",
+        "birthDate": "20010417",
+        "items": [
+            {
+                "id": "4347",
+                "title": "Solve a problem"
+            }
+        ]
+    },
+    {
+        "id": "3",
+        "deptId": "785",
+        "title": "Developer",
+        "name": "Albert Undz",
+        "birthDate": "19841222",
+        "items": [
+            {
+                "id": "4348",
+                "title": "Read a book"
+            }
+        ]
+    },
+    {
+        "id": "4",
+        "deptId": "6542",
+        "title": "Data Scientist",
+        "name": "Pheobe Rex",
+        "birthDate": "19900909",
+        "items": [
+            {
+                "id": "54522",
+                "title": "Science things"
+            }
+        ]
+    },
+    {
+        "id": "92",
+        "deptId": "6542",
+        "title": "Developer",
+        "name": "Steve Acosta",
+        "birthDate": "20000729"
+    }
+]

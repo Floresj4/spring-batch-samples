@@ -11,3 +11,8 @@ Will build and tag a container image
 `mvn clean package`
 
 Will build an executable jar for local test and development.
+
+
+### TODO
+
+- implement service trigger

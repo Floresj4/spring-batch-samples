@@ -22,6 +22,7 @@
 		<module>fixedwidth-reader</module>
     	<module>custom-record-parsing</module>
     	<module>container-packaging</module>
+    	<module>service-trigger</module>
 	</modules>
 
 	<properties>
