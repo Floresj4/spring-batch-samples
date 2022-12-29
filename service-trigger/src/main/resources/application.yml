@@ -1,5 +1,10 @@
 spring:
   batch:
     job:
-      enabled: false
+      enabled: true
     initialize-schema: always
+
+logging:
+  level:
+    root: ERROR
+    com.flores: DEBUG
