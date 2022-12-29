@@ -7,18 +7,20 @@ import org.springframework.batch.core.configuration.annotation.StepBuilderFactor
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.item.ItemStreamReader;
 import org.springframework.batch.item.ItemWriter;
-import org.springframework.batch.item.json.JacksonJsonObjectReader;
-import org.springframework.batch.item.json.builder.JsonItemReaderBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.Resource;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.flores.dev.springbatch.model.Employee;
+import com.flores.dev.springbatch.reader.S3ObjectStreamReader;
 
+import lombok.extern.slf4j.Slf4j;
+import software.amazon.awssdk.auth.credentials.DefaultCredentialsProvider;
+import software.amazon.awssdk.regions.Region;
+import software.amazon.awssdk.services.s3.S3Client;
+
+@Slf4j
 @Configuration
 @EnableBatchProcessing
 public class JsonReadConfig {
@@ -32,19 +34,25 @@ public class JsonReadConfig {
 	@Bean
 	@StepScope
 	public ItemStreamReader<Employee> reader(@Value("#{jobParameters['inputFile']}") String inputFile) {		
-
-		Resource resource = new FileSystemResource(inputFile);
-	
-		JacksonJsonObjectReader<Employee> jsonObjectReader = new JacksonJsonObjectReader<>(Employee.class);
-		jsonObjectReader.setMapper(new ObjectMapper());
-
-		return new JsonItemReaderBuilder<Employee>()
-				.name("EmployeeJsonReader")
-				.jsonObjectReader(jsonObjectReader)
-				.resource(resource)
+		return S3ObjectStreamReader.builder()
+				.withClient(s3Client())
+				.withResource(inputFile)
 				.build();
 	}
-	
+
+	@Bean
+	public S3Client s3Client() {
+		log.debug("Initializing S3 client bean...");
+		DefaultCredentialsProvider provider = DefaultCredentialsProvider.builder()
+				.build();
+		
+		return S3Client.builder()
+				.region(Region.US_EAST_1)
+				.credentialsProvider(provider)
+				.forcePathStyle(true)
+				.build();
+	}
+
 	@Bean
 	@StepScope
 	public ItemWriter<Employee> writer() {
