@@ -5,6 +5,7 @@ import org.springframework.batch.core.configuration.annotation.EnableBatchProces
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepScope;
+import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.core.launch.support.SimpleJobLauncher;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.item.ItemStreamReader;
@@ -76,8 +77,8 @@ public class JsonReadConfig {
 	
 	@Bean
 	public Job serviceTriggerJob() {
-		return jobFactory
-				.get("ServiceTriggerJob")
+		return jobFactory.get("ServiceTriggerJob")
+				.incrementer(new RunIdIncrementer())
 				.flow(serviceTriggerStep())
 				.end()
 				.build();
