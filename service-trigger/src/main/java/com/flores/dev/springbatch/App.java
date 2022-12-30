@@ -3,6 +3,10 @@ package com.flores.dev.springbatch;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+/**
+ * 
+ * @author jason
+ */
 @SpringBootApplication
 public class App {
 
