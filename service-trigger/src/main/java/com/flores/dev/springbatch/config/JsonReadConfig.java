@@ -5,12 +5,17 @@ import org.springframework.batch.core.configuration.annotation.EnableBatchProces
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepScope;
+import org.springframework.batch.core.launch.support.SimpleJobLauncher;
+import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.item.ItemStreamReader;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
+import org.springframework.core.task.SimpleAsyncTaskExecutor;
 
 import com.flores.dev.springbatch.model.Employee;
 import com.flores.dev.springbatch.reader.S3ObjectStreamReader;
@@ -30,6 +35,9 @@ public class JsonReadConfig {
 	
 	@Autowired
 	private StepBuilderFactory stepFactory;
+
+	@Autowired
+	private JobRepository jobRepository;
 
 	@Bean
 	@StepScope
@@ -53,6 +61,15 @@ public class JsonReadConfig {
 				.build();
 	}
 
+	@Bean
+	SimpleJobLauncher getJobLauncher() throws Exception {
+        SimpleJobLauncher jobLauncher = new SimpleJobLauncher();
+        jobLauncher.setJobRepository(jobRepository);
+        jobLauncher.setTaskExecutor(new SimpleAsyncTaskExecutor());
+        jobLauncher.afterPropertiesSet();
+        return jobLauncher;
+	}
+	
 	@Bean
 	@StepScope
 	public ItemWriter<Employee> writer() {
