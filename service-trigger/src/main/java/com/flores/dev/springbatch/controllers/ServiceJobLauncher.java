@@ -14,7 +14,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import lombok.Builder;
 import lombok.Data;
+import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -28,18 +30,37 @@ public final class ServiceJobLauncher {
 	private ApplicationContext context;
 	
 	@PostMapping("/run")
-	public ExitStatus startBatchJob(@RequestBody JobLaunchRequest request) throws Exception {
+	public JobLaunchResponse startBatchJob(@RequestBody JobLaunchRequest request) throws Exception {
 		String name = request.getName();
 		Job job = context.getBean(name, Job.class);
 		log.info("Attempting to launch {} job...", name);
 
 		//set an async executor to allow response to continue
 		JobExecution execution = jobLauncher.run(job, request.getJobParameters());
-
+		
+		long id = execution.getId();
+		
 		ExitStatus status = execution.getExitStatus();
-		return status;
+
+		JobLaunchResponse response = JobLaunchResponse.builder()
+				.withStatus(status)
+				.withId(id)
+				.build();
+		
+		log.debug("Job execution response: " + response);
+		return response;
 	}
 
+	@Data
+	@ToString
+	@Builder(setterPrefix = "with")
+	public static class JobLaunchResponse {
+		
+		private long id;
+		
+		private ExitStatus status;
+	}
+	
 	/**
 	 * Payload required to launch a job via http.
 	 * @author Jason
