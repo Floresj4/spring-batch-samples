@@ -25,7 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
-public final class ServiceJobLauncher {
+public final class JobLaunchController {
 
 	@Autowired
 	private SimpleJobLauncher jobLauncher;
