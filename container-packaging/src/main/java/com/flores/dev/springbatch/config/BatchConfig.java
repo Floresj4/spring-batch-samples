@@ -9,6 +9,8 @@ import org.springframework.batch.core.configuration.annotation.EnableBatchProces
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepScope;
+import org.springframework.batch.core.launch.support.SimpleJobLauncher;
+import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.item.ItemStreamReader;
 import org.springframework.batch.item.ItemStreamWriter;
 import org.springframework.batch.item.file.builder.FlatFileItemReaderBuilder;
@@ -21,6 +23,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
+import org.springframework.core.task.SimpleAsyncTaskExecutor;
 
 import com.flores.dev.springbatch.model.Person;
 
@@ -32,10 +35,24 @@ import lombok.extern.slf4j.Slf4j;
 public class BatchConfig {
 	
 	@Autowired
-	private StepBuilderFactory stepBuilder;
+	public JobRepository jobRepository;
 	
 	@Autowired
 	public JobBuilderFactory jobBuilder;
+
+	@Autowired
+	private StepBuilderFactory stepBuilder;
+
+	@Bean
+	SimpleJobLauncher getJobLauncher() throws Exception {
+		log.info("Initializing async job launcher...");
+
+        SimpleJobLauncher jobLauncher = new SimpleJobLauncher();
+        jobLauncher.setJobRepository(jobRepository);
+        jobLauncher.setTaskExecutor(new SimpleAsyncTaskExecutor());
+        jobLauncher.afterPropertiesSet();
+        return jobLauncher;
+	}
 	
 	@Bean
 	@StepScope
