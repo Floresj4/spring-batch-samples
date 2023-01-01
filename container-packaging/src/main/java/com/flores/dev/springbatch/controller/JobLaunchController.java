@@ -1,9 +1,7 @@
 package com.flores.dev.springbatch.controller;
 
-import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
-import java.util.stream.Collectors;
 
 import org.springframework.batch.core.ExitStatus;
 import org.springframework.batch.core.Job;
@@ -16,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -28,7 +27,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
-public class JobLauncherController {
+public class JobLaunchController {
 
 	@Autowired
 	private ApplicationContext context;
@@ -40,7 +39,7 @@ public class JobLauncherController {
 	private SimpleJobLauncher jobLauncher;
 
 	@PostMapping("/run")
-	public JobLaunchResponse launchJob(JobLaunchRequest request) throws Exception {
+	public JobLaunchResponse launchJob(@RequestBody JobLaunchRequest request) throws Exception {
 		
 		String name = request.getName();
 		log.info("Launching job {}", name);
