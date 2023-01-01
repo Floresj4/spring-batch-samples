@@ -48,11 +48,13 @@ public class JobLaunchController {
 		
 		Job job = context.getBean(name, Job.class);
 		JobExecution execution = jobLauncher.run(job, jobParameters);
+		
+		long id = execution.getId();
 		ExitStatus status = execution.getExitStatus();
 
 		return JobLaunchResponse.builder()
 				.withStatus(status)
-				.withId(0)
+				.withId(id)
 				.build();
 	}
 
@@ -78,10 +80,10 @@ public class JobLaunchController {
 
 		private String name;
 		
-		private Properties properties;
+		private Properties jobParameters;
 		
 		public JobParameters toJobParameters() {
-			return new JobParametersBuilder(properties)
+			return new JobParametersBuilder(jobParameters)
 					.toJobParameters();
 		}
 	}
