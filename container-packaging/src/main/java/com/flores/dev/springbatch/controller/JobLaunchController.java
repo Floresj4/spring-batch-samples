@@ -99,7 +99,7 @@ public class JobLaunchController {
 	}
 	
 	/**
-	 * Return unknown instead of returning a certain status codes
+	 * Return unknown instead of exposing certain status codes
 	 * 
 	 * @author jason
 	 */
