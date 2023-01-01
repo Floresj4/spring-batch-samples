@@ -11,6 +11,7 @@ import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.core.launch.support.SimpleJobLauncher;
 import org.springframework.batch.core.repository.JobRepository;
+import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.ItemStreamReader;
 import org.springframework.batch.item.ItemStreamWriter;
 import org.springframework.batch.item.file.builder.FlatFileItemWriterBuilder;
@@ -80,6 +81,14 @@ public class BatchConfig {
 	}
 	
 	@Bean
+	public ItemProcessor<Person, Person> personProcessor() {
+		return (p) -> {
+			log.debug(String.valueOf(p));
+			return p;
+		};
+	}
+	
+	@Bean
 	@StepScope
 	public ItemStreamWriter<Person> writer(@Value("#{jobParameters['inputFile']}") String inputFile) throws Exception {
 		
@@ -102,6 +111,7 @@ public class BatchConfig {
 				.get("PersonProcessingStep")
 				.<Person, Person>chunk(5)
 				.reader(reader(null))
+				.processor(personProcessor())
 				.writer(writer(null))
 				.build();
 	}
