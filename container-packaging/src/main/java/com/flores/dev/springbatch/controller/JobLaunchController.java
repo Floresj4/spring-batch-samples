@@ -1,5 +1,6 @@
 package com.flores.dev.springbatch.controller;
 
+import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Properties;
 
@@ -44,10 +45,22 @@ public class JobLaunchController {
 		String name = request.getName();
 		log.info("Launching job {}", name);
 
-		JobParameters jobParameters = request.toJobParameters();
+		Job job = context.getBean(name, Job.class);		
+
+		JobParametersBuilder jobParametersBuilder = new JobParametersBuilder(jobExplorer)
+				.getNextJobParameters(job);
 		
-		Job job = context.getBean(name, Job.class);
+		//add user posted properties as strings
+		for(Entry<Object, Object> e : request.getJobParameters().entrySet()) {
+			jobParametersBuilder.addString(
+					String.valueOf(e.getKey()),
+					String.valueOf(e.getValue()));
+		}
+
+		JobParameters jobParameters = jobParametersBuilder.toJobParameters();		
 		JobExecution execution = jobLauncher.run(job, jobParameters);
+
+		log.info("Executed job {} with parameters {}", jobParameters);
 		
 		long id = execution.getId();
 		ExitStatus status = execution.getExitStatus();
@@ -73,7 +86,7 @@ public class JobLaunchController {
 
 		return new EmptyJobLaunchResponse(id);
 	}
-	
+
 	@Data
 	@ToString
 	public static class JobLaunchRequest {
@@ -82,9 +95,8 @@ public class JobLaunchController {
 		
 		private Properties jobParameters;
 		
-		public JobParameters toJobParameters() {
-			return new JobParametersBuilder(jobParameters)
-					.toJobParameters();
+		public JobParametersBuilder toJobParametersBuilder() {
+			return new JobParametersBuilder(jobParameters);
 		}
 	}
 
