@@ -1,9 +1,8 @@
 package com.flores.dev.springbatch.controller;
 
-import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Properties;
-import java.util.stream.Collectors;
 
 import org.springframework.batch.core.ExitStatus;
 import org.springframework.batch.core.Job;
@@ -16,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -28,7 +28,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
-public class JobLauncherController {
+public class JobLaunchController {
 
 	@Autowired
 	private ApplicationContext context;
@@ -40,20 +40,34 @@ public class JobLauncherController {
 	private SimpleJobLauncher jobLauncher;
 
 	@PostMapping("/run")
-	public JobLaunchResponse launchJob(JobLaunchRequest request) throws Exception {
+	public JobLaunchResponse launchJob(@RequestBody JobLaunchRequest request) throws Exception {
 		
 		String name = request.getName();
 		log.info("Launching job {}", name);
 
-		JobParameters jobParameters = request.toJobParameters();
+		Job job = context.getBean(name, Job.class);		
+
+		JobParametersBuilder jobParametersBuilder = new JobParametersBuilder(jobExplorer)
+				.getNextJobParameters(job);
 		
-		Job job = context.getBean(name, Job.class);
+		//add user posted properties as strings
+		for(Entry<Object, Object> e : request.getJobParameters().entrySet()) {
+			jobParametersBuilder.addString(
+					String.valueOf(e.getKey()),
+					String.valueOf(e.getValue()));
+		}
+
+		JobParameters jobParameters = jobParametersBuilder.toJobParameters();		
 		JobExecution execution = jobLauncher.run(job, jobParameters);
+
+		log.info("Executed job {} with parameters {}", jobParameters);
+		
+		long id = execution.getId();
 		ExitStatus status = execution.getExitStatus();
 
 		return JobLaunchResponse.builder()
 				.withStatus(status)
-				.withId(0)
+				.withId(id)
 				.build();
 	}
 
@@ -72,18 +86,17 @@ public class JobLauncherController {
 
 		return new EmptyJobLaunchResponse(id);
 	}
-	
+
 	@Data
 	@ToString
 	public static class JobLaunchRequest {
 
 		private String name;
 		
-		private Properties properties;
+		private Properties jobParameters;
 		
-		public JobParameters toJobParameters() {
-			return new JobParametersBuilder(properties)
-					.toJobParameters();
+		public JobParametersBuilder toJobParametersBuilder() {
+			return new JobParametersBuilder(jobParameters);
 		}
 	}
 
@@ -98,7 +111,7 @@ public class JobLauncherController {
 	}
 	
 	/**
-	 * Return unknown instead of returning a certain status codes
+	 * Return unknown instead of exposing certain status codes
 	 * 
 	 * @author jason
 	 */

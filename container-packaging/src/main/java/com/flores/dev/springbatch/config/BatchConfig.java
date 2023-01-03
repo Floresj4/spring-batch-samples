@@ -1,7 +1,6 @@
 package com.flores.dev.springbatch.config;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -9,13 +8,13 @@ import org.springframework.batch.core.configuration.annotation.EnableBatchProces
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepScope;
+import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.core.launch.support.SimpleJobLauncher;
 import org.springframework.batch.core.repository.JobRepository;
+import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.ItemStreamReader;
 import org.springframework.batch.item.ItemStreamWriter;
-import org.springframework.batch.item.file.builder.FlatFileItemReaderBuilder;
 import org.springframework.batch.item.file.builder.FlatFileItemWriterBuilder;
-import org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper;
 import org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,8 +25,12 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.task.SimpleAsyncTaskExecutor;
 
 import com.flores.dev.springbatch.model.Person;
+import com.flores.dev.springbatch.reader.S3ObjectStreamReader;
 
 import lombok.extern.slf4j.Slf4j;
+import software.amazon.awssdk.auth.credentials.DefaultCredentialsProvider;
+import software.amazon.awssdk.regions.Region;
+import software.amazon.awssdk.services.s3.S3Client;
 
 @Slf4j
 @Configuration
@@ -55,21 +58,34 @@ public class BatchConfig {
 	}
 	
 	@Bean
+	public S3Client getS3Client() {
+
+		DefaultCredentialsProvider credentialsProvider = DefaultCredentialsProvider
+				.create();
+
+		return S3Client.builder()
+				.credentialsProvider(credentialsProvider)
+				.region(Region.US_EAST_1)
+				.build();
+	}
+
+	@Bean
 	@StepScope
 	public ItemStreamReader<Person> reader(@Value("#{jobParameters['inputFile']}") String inputFile) {
 		log.info("Initializing input file {}", inputFile);
 		
-		Resource fileResource = new FileSystemResource(inputFile);
-		
-		return new FlatFileItemReaderBuilder<Person>()
-				.name("BeanWrappedPersonReader")
-				.resource(fileResource)
-				.delimited()
-				.names("firstName", "lastName")
-				.fieldSetMapper(new BeanWrapperFieldSetMapper<Person>() {
-					{ setTargetType(Person.class); }
-				})
+		return S3ObjectStreamReader.builder()
+				.withResource(inputFile)
+				.withClient(getS3Client())
 				.build();
+	}
+	
+	@Bean
+	public ItemProcessor<Person, Person> personProcessor() {
+		return (p) -> {
+			log.debug(String.valueOf(p));
+			return p;
+		};
 	}
 	
 	@Bean
@@ -95,6 +111,7 @@ public class BatchConfig {
 				.get("PersonProcessingStep")
 				.<Person, Person>chunk(5)
 				.reader(reader(null))
+				.processor(personProcessor())
 				.writer(writer(null))
 				.build();
 	}
@@ -103,6 +120,7 @@ public class BatchConfig {
 	public Job batchProcessingJob() throws Exception {
 		return jobBuilder
 				.get("PersonProcessingJob")
+				.incrementer(new RunIdIncrementer())
 				.flow(batchProcessingStep())
 				.end()
 				.build();
@@ -114,24 +132,14 @@ public class BatchConfig {
 	 */
 	private File getOutputFile(String inputFile) throws Exception {
 		File input = new File(inputFile);
-		if(!input.exists()) {
-			throw new FileNotFoundException("Input file does not exist.");
-		}
-		
-		if(input.isDirectory()) {
-			throw new FileNotFoundException("Input file must be an file to execute.");
-		}
-		
-		//will be a directory
-		File parent = input.getParentFile();
 		
 		int separator = input.getName().indexOf('.');
 		
 		String name = input.getName();
 		String extension = name.substring(separator + 1);
 		String outName = name.substring(0, separator);
-		
-		File outputFile = new File(parent, outName + "-out." + extension);
+
+		File outputFile = new File("../input-files/", outName + "-out." + extension);
 		
 		log.info("Initializing output file as {}", outputFile.getCanonicalPath());
 		return outputFile;
