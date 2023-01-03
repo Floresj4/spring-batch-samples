@@ -34,6 +34,10 @@ public class S3ObjectStreamReader implements ItemStreamReader<Person> {
 
 	private String resource;
 	
+	/**
+	 * The client is managed by Spring.  Do not close the
+	 * client when closing the resource
+	 */
 	private S3Client client;
 
 	private ItemStreamReader<Person> delegate;
@@ -68,9 +72,9 @@ public class S3ObjectStreamReader implements ItemStreamReader<Person> {
 		try { response.close(); } catch (IOException e) {
 			log.error("Unable to close response on StreamReader.close()");
 		}
-		
-		client.close();
+
 		delegate.close();
+		delegate = null;
 	}
 
 	/**
