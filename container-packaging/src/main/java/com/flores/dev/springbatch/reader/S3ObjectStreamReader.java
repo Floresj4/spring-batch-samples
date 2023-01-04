@@ -103,7 +103,7 @@ public class S3ObjectStreamReader implements ItemStreamReader<Person> {
 	 * @throws URISyntaxException on bad path
 	 */
 	private ItemStreamReader<Person> getDelegate() throws URISyntaxException {
-		if(Optional.ofNullable(delegate).isEmpty()) {			
+		if(!Optional.ofNullable(delegate).isPresent()) {			
 			log.info("Initializing remote resource reader for {}", resource);
 
 			//request object
