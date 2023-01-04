@@ -1,18 +1,25 @@
 # Container packaging
 
-Package a SpringBoot application as an [Open Container Initiutive](https://opencontainers.org/) (OCI) container.
+Package a SpringBoot application as an [Open Container Initiutive](https://opencontainers.org/) (OCI) container for remote deployment.
 
-### Build
+This application provides a `RestController` with endpoints for executing batch jobs and checking their status.
+
+## Build
+
+To build and tag a container image
 
 `mvn clean spring-boot:build-image`
 
-Will build and tag a container image
+To build an executable jar for local test and development.
 
 `mvn clean package`
 
-Will build an executable jar for local test and development.
+## Container Execution
 
+Execution with docker requires port binding for the controller handling job execution requests and AWS credentials to download the test file.  The following command will launch the latest container image.
 
-### TODO
+`docker run -p 8080:8080 -e AWS_ACCESS_KEY_ID=[your_key_here] -e AWS_SECRET_ACCESS_KEY=[your_key_here] container-packaging:latest`
 
-- implement service trigger
+## Local Execution
+
+`java -jar container-packaging.jar inputFile=s3://...`
