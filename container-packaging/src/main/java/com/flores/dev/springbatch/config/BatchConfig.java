@@ -1,6 +1,7 @@
 package com.flores.dev.springbatch.config;
 
 import java.io.File;
+import java.util.UUID;
 
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -138,8 +139,10 @@ public class BatchConfig {
 		String name = input.getName();
 		String extension = name.substring(separator + 1);
 		String outName = name.substring(0, separator);
-
-		File outputFile = new File("../input-files/", outName + "-out." + extension);
+		String outputDir = System.getProperty("java.io.tmpdir")
+				+ "/" + UUID.randomUUID();
+		
+		File outputFile = new File(outputDir, outName + "-out." + extension);
 		
 		log.info("Initializing output file as {}", outputFile.getCanonicalPath());
 		return outputFile;
