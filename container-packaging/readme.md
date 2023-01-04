@@ -20,6 +20,53 @@ Execution with docker requires port binding for the controller handling job exec
 
 `docker run -p 8080:8080 -e AWS_ACCESS_KEY_ID=[your_key_here] -e AWS_SECRET_ACCESS_KEY=[your_key_here] container-packaging:latest`
 
+The embedded tomcat server launches on the default port `8080` for launching jobs.
+
+## Endpoints
+
+Each endpoint returns the same response structure for simplicity.
+
+```
+{
+    "id": [jobId],
+    "status": {
+        "exitCode": "",
+        "exitDescription": "",
+        "running": true
+    }
+}
+```
+
+### /run
+
+Run a batch job.  The response will contain the job id for status checks.
+
+```
+POST http://localhost:8080/run
+{
+    "name": "batchProcessingJob",
+    "jobParameters": {
+        "inputFile": "s3://..."
+    }
+}
+```
+
+| Field  | Description |
+|--------|-------------|
+| Name   | The bean name for the |
+| jobParameters | A collection of parameters for the batch application. |
+
+### /status
+Get a batch job status.
+
+```
+GET http://localhost:8080?id={jobId}
+```
+
+| Field  | Description   |
+|--------|---------------|
+| jobId  | job execution id  |
+
 ## Local Execution
 
 `java -jar container-packaging.jar inputFile=s3://...`
