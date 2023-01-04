@@ -53,7 +53,7 @@ POST http://localhost:8080/run
 
 | Field  | Description |
 |--------|-------------|
-| Name   | The bean name for the |
+| Name   | The registered bean name for the batch Job |
 | jobParameters | A collection of parameters for the batch application. |
 
 ### /status
