@@ -1,10 +1,10 @@
-package com.flores.development.springbatch;
+package com.flores.dev.springbatch;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.item.ItemProcessor;
 
-import com.flores.development.springbatch.model.Person;
+import com.flores.dev.springbatch.model.Person;
 
 public class PersonProcessor implements ItemProcessor<Person, Person> {
 
