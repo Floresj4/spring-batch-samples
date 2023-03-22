@@ -1,4 +1,4 @@
-package com.flores.development.springbatch.config;
+package com.flores.dev.springbatch.config;
 
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -17,10 +17,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 
-import com.flores.development.springbatch.listeners.LoggingChunkListener;
-import com.flores.development.springbatch.listeners.LoggingJobExecutionListener;
-import com.flores.development.springbatch.listeners.LoggingStepExecutionListener;
-import com.flores.development.springbatch.model.Customer;
+import com.flores.dev.springbatch.listeners.LoggingChunkListener;
+import com.flores.dev.springbatch.listeners.LoggingJobExecutionListener;
+import com.flores.dev.springbatch.listeners.LoggingStepExecutionListener;
+import com.flores.dev.springbatch.model.Customer;
 
 import lombok.extern.slf4j.Slf4j;
 
