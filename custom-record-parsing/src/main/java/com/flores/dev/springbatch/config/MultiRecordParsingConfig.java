@@ -1,4 +1,4 @@
-package com.flores.development.springbatch.config;
+package com.flores.dev.springbatch.config;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -24,10 +24,10 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 
-import com.flores.development.springbatch.model.Employee;
-import com.flores.development.springbatch.parsing.EmployeeBuilderFieldSetMapper;
-import com.flores.development.springbatch.parsing.WorkItemFieldSetMapper;
-import com.flores.development.springbatch.reader.EmployeeFileReader;
+import com.flores.dev.springbatch.model.Employee;
+import com.flores.dev.springbatch.parsing.EmployeeBuilderFieldSetMapper;
+import com.flores.dev.springbatch.parsing.WorkItemFieldSetMapper;
+import com.flores.dev.springbatch.reader.EmployeeFileReader;
 
 import lombok.extern.slf4j.Slf4j;
 

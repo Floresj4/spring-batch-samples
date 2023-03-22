@@ -1,4 +1,4 @@
-package com.flores.development.springbatch.model;
+package com.flores.dev.springbatch.model;
 
 import java.time.LocalDate;
 import java.util.Collections;

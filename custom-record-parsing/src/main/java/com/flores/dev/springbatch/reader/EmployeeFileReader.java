@@ -1,4 +1,4 @@
-package com.flores.development.springbatch.reader;
+package com.flores.dev.springbatch.reader;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,9 +10,9 @@ import org.springframework.batch.item.NonTransientResourceException;
 import org.springframework.batch.item.ParseException;
 import org.springframework.batch.item.UnexpectedInputException;
 
-import com.flores.development.springbatch.model.Employee;
-import com.flores.development.springbatch.model.Employee.EmployeeBuilder;
-import com.flores.development.springbatch.model.WorkItem;
+import com.flores.dev.springbatch.model.Employee;
+import com.flores.dev.springbatch.model.WorkItem;
+import com.flores.dev.springbatch.model.Employee.EmployeeBuilder;
 
 import lombok.extern.slf4j.Slf4j;
 

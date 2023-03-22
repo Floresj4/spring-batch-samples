@@ -1,4 +1,4 @@
-package com.flores.development.springbatch.parsing;
+package com.flores.dev.springbatch.parsing;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -7,7 +7,7 @@ import org.springframework.batch.item.file.mapping.FieldSetMapper;
 import org.springframework.batch.item.file.transform.FieldSet;
 import org.springframework.validation.BindException;
 
-import com.flores.development.springbatch.model.Employee;
+import com.flores.dev.springbatch.model.Employee;
 
 public class EmployeeFieldSetMapper implements FieldSetMapper<Employee>{
 

@@ -1,4 +1,4 @@
-package com.flores.development.springbatch.config;
+package com.flores.dev.springbatch.config;
 
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -17,9 +17,9 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 
-import com.flores.development.springbatch.model.Employee;
-import com.flores.development.springbatch.parsing.EmployeeFieldSetMapper;
-import com.flores.development.springbatch.parsing.EmployeeLineTokenizer;
+import com.flores.dev.springbatch.model.Employee;
+import com.flores.dev.springbatch.parsing.EmployeeFieldSetMapper;
+import com.flores.dev.springbatch.parsing.EmployeeLineTokenizer;
 
 import lombok.extern.slf4j.Slf4j;
 

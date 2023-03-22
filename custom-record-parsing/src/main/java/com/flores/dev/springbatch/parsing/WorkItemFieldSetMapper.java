@@ -1,10 +1,10 @@
-package com.flores.development.springbatch.parsing;
+package com.flores.dev.springbatch.parsing;
 
 import org.springframework.batch.item.file.mapping.FieldSetMapper;
 import org.springframework.batch.item.file.transform.FieldSet;
 import org.springframework.validation.BindException;
 
-import com.flores.development.springbatch.model.WorkItem;
+import com.flores.dev.springbatch.model.WorkItem;
 
 import lombok.extern.slf4j.Slf4j;
 
