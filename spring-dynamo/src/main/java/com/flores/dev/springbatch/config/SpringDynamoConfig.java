@@ -1,5 +1,8 @@
 package com.flores.dev.springbatch.config;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
@@ -16,6 +19,11 @@ import org.springframework.core.io.Resource;
 
 import com.flores.dev.springbatch.model.WeightEntry;
 
+import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
+import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
+import software.amazon.awssdk.regions.Region;
+import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
+
 @Configuration
 @EnableBatchProcessing
 public class SpringDynamoConfig {
@@ -27,10 +35,10 @@ public class SpringDynamoConfig {
 	private String AWS_REGION;
 
 	@Value("${aws.accessKey}")
-	private String ACCESS_KEY;
+	private String AWS_ACCESS_KEY;
 
 	@Value("${aws.secretKey}")
-	private String SECRET_KEY;
+	private String AWS_SECRET_KEY;
 
 	@Value("${aws.sessionToken}")
 	private String SESSION_TOKEN;
@@ -55,4 +63,15 @@ public class SpringDynamoConfig {
 				}})
 				.build();
 	}
+	
+	@Bean
+    private DynamoDbClient getDynamoDbClient() throws URISyntaxException {
+		return DynamoDbClient.builder()
+				.credentialsProvider(StaticCredentialsProvider
+						.create(AwsBasicCredentials.create(AWS_ACCESS_KEY, 
+								AWS_SECRET_KEY)))
+				.region(Region.US_EAST_1)
+				.endpointOverride(new URI(DB_ENDPOINT))
+				.build();
+    }
 }
