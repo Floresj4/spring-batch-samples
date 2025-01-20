@@ -1,0 +1,11 @@
+package com.flores.dev.springbatch;
+
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class App {
+
+	public static void main(String args[]) throws Exception {
+		
+	}
+}
