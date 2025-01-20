@@ -20,6 +20,21 @@ import com.flores.dev.springbatch.model.WeightEntry;
 @EnableBatchProcessing
 public class SpringDynamoConfig {
 
+	@Value("${aws.endpoint}")
+	private String DB_ENDPOINT;
+
+	@Value("${aws.region}")
+	private String AWS_REGION;
+
+	@Value("${aws.accessKey}")
+	private String ACCESS_KEY;
+
+	@Value("${aws.secretKey}")
+	private String SECRET_KEY;
+
+	@Value("${aws.sessionToken}")
+	private String SESSION_TOKEN;
+    
 	@Autowired
 	JobBuilderFactory jobBuilder;
 	
