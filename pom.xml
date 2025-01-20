@@ -23,6 +23,7 @@
     	<module>custom-record-parsing</module>
     	<module>container-packaging</module>
     	<module>service-trigger</module>
+    	<module>spring-dynamo</module>
 	</modules>
 
 	<properties>
