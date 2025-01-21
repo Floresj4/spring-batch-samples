@@ -81,14 +81,14 @@ public class SpringDynamoConfig {
 	@Bean
 	public ItemWriter<WeightEntry> getWriter(@Value("#{jobParameters['tableName']}") String tableName) throws URISyntaxException {
 		return DynamoDbWriter.builder()
-				.withDynamo(getDynamoDbClient())
+				.withDynamoDbClient(getDynamoDbClient())
 				.withTableName(tableName)
 				.build();
 	}
-	
+
 	@Bean
-	public Step step() throws URISyntaxException {
-		return stepBuilder.get("Step 1")
+	public Step readWriteStep() throws URISyntaxException {
+		return stepBuilder.get("ReadWriteStep")
 				.<WeightEntry, WeightEntry>chunk(10)
 				.reader(getReader(null))
 				.writer(getWriter(null))
@@ -98,7 +98,7 @@ public class SpringDynamoConfig {
 	@Bean
 	public Job job() throws URISyntaxException {
 		return jobBuilder.get("Import job")
-				.flow(step())
+				.flow(readWriteStep())
 				.end()
 				.build();
 	}
