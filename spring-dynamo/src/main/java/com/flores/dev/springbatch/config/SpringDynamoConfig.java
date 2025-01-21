@@ -8,6 +8,7 @@ import org.springframework.batch.core.configuration.annotation.JobBuilderFactory
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.item.ItemStreamReader;
+import org.springframework.batch.item.ItemWriter;
 import org.springframework.batch.item.file.builder.FlatFileItemReaderBuilder;
 import org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,4 +75,13 @@ public class SpringDynamoConfig {
 				.endpointOverride(new URI(DB_ENDPOINT))
 				.build();
     }
+	
+	@Bean
+	@StepScope
+	public ItemWriter<WeightEntry> getWriter(@Value("#{jobParameters['tableName']}") String tableName) throws URISyntaxException {
+		return DynamoDbWriter.builder()
+				.withDynamo(getDynamoDbClient())
+				.withTableName(tableName)
+				.build();
+	}
 }
