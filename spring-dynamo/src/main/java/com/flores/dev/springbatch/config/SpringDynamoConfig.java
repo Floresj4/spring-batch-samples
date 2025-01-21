@@ -3,6 +3,7 @@ package com.flores.dev.springbatch.config;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
@@ -77,11 +78,19 @@ public class SpringDynamoConfig {
     }
 	
 	@Bean
-	@StepScope
 	public ItemWriter<WeightEntry> getWriter(@Value("#{jobParameters['tableName']}") String tableName) throws URISyntaxException {
 		return DynamoDbWriter.builder()
 				.withDynamo(getDynamoDbClient())
 				.withTableName(tableName)
+				.build();
+	}
+	
+	@Bean
+	public Step step() {
+		return stepBuilder.get("Step 1")
+				.<WeightEntry, WeightEntry>chunk(10)
+				.reader(getReader(null))
+				.writer(getWriter(null))
 				.build();
 	}
 }
