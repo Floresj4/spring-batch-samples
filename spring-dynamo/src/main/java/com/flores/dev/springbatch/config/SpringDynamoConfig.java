@@ -3,6 +3,7 @@ package com.flores.dev.springbatch.config;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
@@ -50,6 +51,17 @@ public class SpringDynamoConfig {
 	
 	@Autowired
 	StepBuilderFactory stepBuilder;
+
+	@Bean
+    private DynamoDbClient getDynamoDbClient() throws URISyntaxException {
+		return DynamoDbClient.builder()
+				.credentialsProvider(StaticCredentialsProvider
+						.create(AwsBasicCredentials.create(AWS_ACCESS_KEY, 
+								AWS_SECRET_KEY)))
+				.region(Region.US_EAST_1)
+				.endpointOverride(new URI(DB_ENDPOINT))
+				.build();
+    }
 	
 	@Bean
 	@StepScope
@@ -67,17 +79,6 @@ public class SpringDynamoConfig {
 	}
 	
 	@Bean
-    private DynamoDbClient getDynamoDbClient() throws URISyntaxException {
-		return DynamoDbClient.builder()
-				.credentialsProvider(StaticCredentialsProvider
-						.create(AwsBasicCredentials.create(AWS_ACCESS_KEY, 
-								AWS_SECRET_KEY)))
-				.region(Region.US_EAST_1)
-				.endpointOverride(new URI(DB_ENDPOINT))
-				.build();
-    }
-	
-	@Bean
 	public ItemWriter<WeightEntry> getWriter(@Value("#{jobParameters['tableName']}") String tableName) throws URISyntaxException {
 		return DynamoDbWriter.builder()
 				.withDynamo(getDynamoDbClient())
@@ -86,11 +87,19 @@ public class SpringDynamoConfig {
 	}
 	
 	@Bean
-	public Step step() {
+	public Step step() throws URISyntaxException {
 		return stepBuilder.get("Step 1")
 				.<WeightEntry, WeightEntry>chunk(10)
 				.reader(getReader(null))
 				.writer(getWriter(null))
+				.build();
+	}
+	
+	@Bean
+	public Job job() throws URISyntaxException {
+		return jobBuilder.get("Import job")
+				.flow(step())
+				.end()
 				.build();
 	}
 }
