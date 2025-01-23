@@ -1,7 +1,11 @@
 package com.flores.dev.springbatch.config;
 
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.batch.item.ItemWriter;
 
@@ -12,6 +16,10 @@ import lombok.extern.slf4j.Slf4j;
 import software.amazon.awssdk.core.waiters.WaiterResponse;
 import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
 import software.amazon.awssdk.services.dynamodb.model.AttributeDefinition;
+import software.amazon.awssdk.services.dynamodb.model.AttributeValue;
+import software.amazon.awssdk.services.dynamodb.model.BatchWriteItemRequest;
+import software.amazon.awssdk.services.dynamodb.model.BatchWriteItemResponse;
+import software.amazon.awssdk.services.dynamodb.model.ConsumedCapacity;
 import software.amazon.awssdk.services.dynamodb.model.CreateTableRequest;
 import software.amazon.awssdk.services.dynamodb.model.CreateTableResponse;
 import software.amazon.awssdk.services.dynamodb.model.DescribeTableRequest;
@@ -19,8 +27,11 @@ import software.amazon.awssdk.services.dynamodb.model.DescribeTableResponse;
 import software.amazon.awssdk.services.dynamodb.model.KeySchemaElement;
 import software.amazon.awssdk.services.dynamodb.model.KeyType;
 import software.amazon.awssdk.services.dynamodb.model.ProvisionedThroughput;
+import software.amazon.awssdk.services.dynamodb.model.PutRequest;
 import software.amazon.awssdk.services.dynamodb.model.ResourceNotFoundException;
+import software.amazon.awssdk.services.dynamodb.model.ReturnConsumedCapacity;
 import software.amazon.awssdk.services.dynamodb.model.ScalarAttributeType;
+import software.amazon.awssdk.services.dynamodb.model.WriteRequest;
 import software.amazon.awssdk.services.dynamodb.waiters.DynamoDbWaiter;
 
 @Slf4j
@@ -48,6 +59,65 @@ public class DynamoDbWriter implements ItemWriter<WeightEntry> {
 				tableExists = createTable(dynamoDbClient, tableName);
 			}
 		}
+		
+		BatchWriteItemRequest batchItemRequest = batchItemRequest(dynamoDbClient, tableName, items, "");
+		BatchWriteItemResponse batchItemResponse = dynamoDbClient.batchWriteItem(batchItemRequest);
+		List<ConsumedCapacity> consumedCapacity = batchItemResponse.consumedCapacity();
+
+		String capacity = consumedCapacity.stream()
+				.map(String::valueOf)
+				.collect(Collectors.joining(
+						System.lineSeparator()));
+		
+		log.info("BatchWriteItemRequest complete.  Consumed capacity: {}", capacity);
+	}
+	
+	public static Map<String, AttributeValue> getItemMap(String userGuid, String entryDate, String value) {
+		Map<String, AttributeValue> item = new HashMap<>();
+
+		AttributeValue guid = AttributeValue.builder()
+				.s(userGuid)
+				.build();
+		
+		item.put(ATTRIBUTE_GUID, guid);
+		AttributeValue entryDateAttr = AttributeValue.builder()
+				.s(entryDate)
+				.build();
+
+		item.put(ATTRIBUTE_ENTRY_DATE, entryDateAttr);
+		AttributeValue valueAttr = AttributeValue.builder()
+				.n(value)
+				.build();
+
+		item.put(ATTRIBUTE_VALUE, valueAttr);
+		return item;
+	}
+	
+	public static BatchWriteItemRequest batchItemRequest(DynamoDbClient client, String tableName, List<? extends WeightEntry> entries, String userGuid) {
+		Map<String, List<WriteRequest>> requestItems = new HashMap<>();
+		
+		int numberOfEntries = RANDOM.nextInt(25);
+		log.info("Attempting to add {} entries", numberOfEntries);
+		
+		for(int i = 0; i < numberOfEntries; i++) {			
+			Map<String, AttributeValue> item = getItemMap(userGuid);
+			
+			List<WriteRequest> putItems = requestItems.getOrDefault(tableName, new ArrayList<>());
+			PutRequest put = PutRequest.builder()
+					.item(item)
+					.build();
+
+			putItems.add(WriteRequest.builder()
+					.putRequest(put)
+					.build());
+			
+			requestItems.put(tableName, putItems);
+		}
+		
+		return BatchWriteItemRequest.builder()
+				.returnConsumedCapacity(ReturnConsumedCapacity.TOTAL)
+				.requestItems(requestItems)
+				.build();
 	}
 	
 	public static boolean createTable(DynamoDbClient client, String tableName) {
