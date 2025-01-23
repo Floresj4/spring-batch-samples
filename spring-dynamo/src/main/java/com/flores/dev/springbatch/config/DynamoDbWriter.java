@@ -33,16 +33,24 @@ public class DynamoDbWriter implements ItemWriter<WeightEntry> {
 	
 	private String tableName;
 
+	private boolean tableExists;
+	
 	private DynamoDbClient dynamoDbClient;
+	
+	private final Object lock = new Object();
 	
 	@Override
 	public void write(List<? extends WeightEntry> items) throws Exception {
 		log.info("Writing {} items to {} table", items.size(), tableName);
-		
-		createTable(dynamoDbClient, tableName);
+	
+		if(!tableExists) {
+			synchronized(lock) {
+				tableExists = createTable(dynamoDbClient, tableName);
+			}
+		}
 	}
 	
-	public static void createTable(DynamoDbClient client, String tableName) {
+	public static boolean createTable(DynamoDbClient client, String tableName) {
 		//describe request to check if exists and if created
 		DescribeTableRequest describeTableRequest = DescribeTableRequest.builder()
 				.tableName(tableName)
@@ -53,26 +61,35 @@ public class DynamoDbWriter implements ItemWriter<WeightEntry> {
 			DescribeTableResponse describeTableResponse = client.describeTable(describeTableRequest);
 			
 			Instant creationDate = describeTableResponse.table().creationDateTime();
-			log.info("{} table created {}", tableName, creationDate);
+			log.info("{} table exists. Created {}", tableName, creationDate);
 		}
 		catch(ResourceNotFoundException e) {
-			log.info("Table {} does not exist.  Creating...", tableName);
+			try{
+				log.info("Table {} does not exist.  Creating...", tableName);
 			
-			CreateTableRequest createTableRequest = createWeightTableRequest();
-			CreateTableResponse createTableResponse = client.createTable(createTableRequest);
-			
-			//wait until DynamoDb is finished
-			DynamoDbWaiter waiter = client.waiter();
-			WaiterResponse<DescribeTableResponse> waiterResponse = waiter.waitUntilTableExists(describeTableRequest);
-			waiterResponse.matched()
-					.response()
-					.ifPresent(System.out::println);;
-			
-			String newTableName = createTableResponse.tableDescription()
-					.tableName();
-
-			log.info("{} created.", newTableName);
+				CreateTableRequest createTableRequest = createWeightTableRequest();
+				CreateTableResponse createTableResponse = client.createTable(createTableRequest);
+				
+				//wait until DynamoDb is finished
+				DynamoDbWaiter waiter = client.waiter();
+				WaiterResponse<DescribeTableResponse> waiterResponse = waiter.waitUntilTableExists(describeTableRequest);
+				waiterResponse.matched()
+						.response()
+						.map(String::valueOf)
+						.ifPresent(log::info);
+				
+				String newTableName = createTableResponse.tableDescription()
+						.tableName();
+	
+				log.info("{} created.", newTableName);
+			}
+			catch(Exception ex) {
+				log.error("An unknown exception occurred", ex);
+				return false;
+			}
 		}
+		
+		return true;
 	}
 	
 	public static CreateTableRequest createWeightTableRequest() {
