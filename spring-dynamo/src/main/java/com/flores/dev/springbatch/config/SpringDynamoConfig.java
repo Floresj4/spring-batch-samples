@@ -31,7 +31,7 @@ import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
 @EnableBatchProcessing
 public class SpringDynamoConfig {
 
-	@Value("${aws.endpoint}")
+	@Value("${aws.dynamodb.endpoint}")
 	private String DB_ENDPOINT;
 
 	@Value("${aws.region}")
@@ -42,9 +42,6 @@ public class SpringDynamoConfig {
 
 	@Value("${aws.secretKey}")
 	private String AWS_SECRET_KEY;
-
-	@Value("${aws.sessionToken}")
-	private String SESSION_TOKEN;
     
 	@Autowired
 	JobBuilderFactory jobBuilder;
@@ -53,7 +50,7 @@ public class SpringDynamoConfig {
 	StepBuilderFactory stepBuilder;
 
 	@Bean
-    private DynamoDbClient getDynamoDbClient() throws URISyntaxException {
+    public DynamoDbClient getDynamoDbClient() throws URISyntaxException {
 		return DynamoDbClient.builder()
 				.credentialsProvider(StaticCredentialsProvider
 						.create(AwsBasicCredentials.create(AWS_ACCESS_KEY, 
