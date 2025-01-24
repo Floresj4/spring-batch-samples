@@ -67,6 +67,8 @@ public class SpringDynamoConfig {
 
 		return new FlatFileItemReaderBuilder<WeightEntry>()
 				.resource(resource)
+				.linesToSkip(1)	//skip the header row
+				.name("CsvReader")
 				.delimited()
 				.names("Date", "Value")
 				.fieldSetMapper(new BeanWrapperFieldSetMapper<WeightEntry>() {{
@@ -76,6 +78,7 @@ public class SpringDynamoConfig {
 	}
 	
 	@Bean
+	@StepScope
 	public ItemWriter<WeightEntry> getWriter(@Value("#{jobParameters['tableName']}") String tableName) throws URISyntaxException {
 		return DynamoDbWriter.builder()
 				.withDynamoDbClient(getDynamoDbClient())
