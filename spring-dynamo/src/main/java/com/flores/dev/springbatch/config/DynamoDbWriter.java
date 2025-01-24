@@ -72,7 +72,7 @@ public class DynamoDbWriter implements ItemWriter<WeightEntry> {
 		log.info("BatchWriteItemRequest complete.  Consumed capacity: {}", capacity);
 	}
 	
-	public static Map<String, AttributeValue> getItemMap(String userGuid, String entryDate, String value) {
+	public static Map<String, AttributeValue> getItemMap(String userGuid, WeightEntry entry) {
 		Map<String, AttributeValue> item = new HashMap<>();
 
 		AttributeValue guid = AttributeValue.builder()
@@ -81,12 +81,12 @@ public class DynamoDbWriter implements ItemWriter<WeightEntry> {
 		
 		item.put(ATTRIBUTE_GUID, guid);
 		AttributeValue entryDateAttr = AttributeValue.builder()
-				.s(entryDate)
+				.s(entry.getDate())
 				.build();
 
 		item.put(ATTRIBUTE_ENTRY_DATE, entryDateAttr);
 		AttributeValue valueAttr = AttributeValue.builder()
-				.n(value)
+				.n(String.valueOf(entry.getValue()))
 				.build();
 
 		item.put(ATTRIBUTE_VALUE, valueAttr);
@@ -96,11 +96,11 @@ public class DynamoDbWriter implements ItemWriter<WeightEntry> {
 	public static BatchWriteItemRequest batchItemRequest(DynamoDbClient client, String tableName, List<? extends WeightEntry> entries, String userGuid) {
 		Map<String, List<WriteRequest>> requestItems = new HashMap<>();
 		
-		int numberOfEntries = RANDOM.nextInt(25);
-		log.info("Attempting to add {} entries", numberOfEntries);
+		log.info("Attempting to add {} entries", entries.size());
 		
-		for(int i = 0; i < numberOfEntries; i++) {			
-			Map<String, AttributeValue> item = getItemMap(userGuid);
+		for(int i = 0; i < entries.size(); i++) {			
+			WeightEntry entry = entries.get(i);
+			Map<String, AttributeValue> item = getItemMap(userGuid, entry);
 			
 			List<WriteRequest> putItems = requestItems.getOrDefault(tableName, new ArrayList<>());
 			PutRequest put = PutRequest.builder()
