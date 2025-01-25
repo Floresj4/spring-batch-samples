@@ -95,7 +95,7 @@ public class SpringDynamoConfig {
 		return stepBuilder.get("ReadWriteStep")
 				.<WeightEntry, WeightEntry>chunk(10)
 				.reader(getReader(null))
-				.writer(getWriter(null))
+				.writer(getWriter(null, null))
 				.build();
 	}
 	
