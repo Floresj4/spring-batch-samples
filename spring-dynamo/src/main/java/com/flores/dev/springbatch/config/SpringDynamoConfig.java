@@ -43,6 +43,8 @@ public class SpringDynamoConfig {
 	@Value("${aws.secretKey}")
 	private String AWS_SECRET_KEY;
     
+
+	
 	@Autowired
 	JobBuilderFactory jobBuilder;
 	
@@ -79,9 +81,11 @@ public class SpringDynamoConfig {
 	
 	@Bean
 	@StepScope
-	public ItemWriter<WeightEntry> getWriter(@Value("#{jobParameters['tableName']}") String tableName) throws URISyntaxException {
+	public ItemWriter<WeightEntry> getWriter(@Value("#{jobParameters['tableName']}") String tableName,
+			@Value("#{jobParameters['guid']}") String userGuid) throws URISyntaxException {
 		return DynamoDbWriter.builder()
 				.withDynamoDbClient(getDynamoDbClient())
+				.withUserGuid(userGuid)
 				.withTableName(tableName)
 				.build();
 	}

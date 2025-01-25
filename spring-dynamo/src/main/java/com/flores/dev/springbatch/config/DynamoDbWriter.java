@@ -43,6 +43,7 @@ public class DynamoDbWriter implements ItemWriter<WeightEntry> {
 	public static final String ATTRIBUTE_VALUE = "value";
 	
 	private String tableName;
+	private String userGuid;
 
 	private boolean tableExists;
 	
@@ -60,7 +61,7 @@ public class DynamoDbWriter implements ItemWriter<WeightEntry> {
 			}
 		}
 		
-		BatchWriteItemRequest batchItemRequest = batchItemRequest(dynamoDbClient, tableName, items, "");
+		BatchWriteItemRequest batchItemRequest = batchItemRequest(dynamoDbClient, tableName, items, userGuid);
 		BatchWriteItemResponse batchItemResponse = dynamoDbClient.batchWriteItem(batchItemRequest);
 		List<ConsumedCapacity> consumedCapacity = batchItemResponse.consumedCapacity();
 
