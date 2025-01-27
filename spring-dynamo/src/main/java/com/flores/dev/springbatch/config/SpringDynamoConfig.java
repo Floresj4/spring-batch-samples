@@ -22,11 +22,13 @@ import org.springframework.core.io.Resource;
 
 import com.flores.dev.springbatch.model.WeightEntry;
 
+import lombok.extern.slf4j.Slf4j;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
 
+@Slf4j
 @Configuration
 @EnableBatchProcessing
 public class SpringDynamoConfig {
@@ -42,8 +44,6 @@ public class SpringDynamoConfig {
 
 	@Value("${aws.secretKey}")
 	private String AWS_SECRET_KEY;
-    
-
 	
 	@Autowired
 	JobBuilderFactory jobBuilder;
@@ -53,6 +53,8 @@ public class SpringDynamoConfig {
 
 	@Bean
     public DynamoDbClient getDynamoDbClient() throws URISyntaxException {
+		log.info("Initializing DynamoDB client");
+
 		return DynamoDbClient.builder()
 				.credentialsProvider(StaticCredentialsProvider
 						.create(AwsBasicCredentials.create(AWS_ACCESS_KEY, 
@@ -65,6 +67,8 @@ public class SpringDynamoConfig {
 	@Bean
 	@StepScope
 	public ItemStreamReader<WeightEntry> getReader(@Value("#{jobParameters['inputFile']}") String inputFile) {
+		log.info("Initializing reader for {}", inputFile);
+
 		Resource resource = new FileSystemResource(inputFile);
 
 		return new FlatFileItemReaderBuilder<WeightEntry>()
@@ -92,6 +96,8 @@ public class SpringDynamoConfig {
 
 	@Bean
 	public Step readWriteStep() throws URISyntaxException {
+		log.info("Initializing batch step");
+
 		return stepBuilder.get("ReadWriteStep")
 				.<WeightEntry, WeightEntry>chunk(10)
 				.reader(getReader(null))
@@ -101,6 +107,8 @@ public class SpringDynamoConfig {
 	
 	@Bean
 	public Job job() throws URISyntaxException {
+		log.info("Initializing batch job");
+
 		return jobBuilder.get("Import job")
 				.flow(readWriteStep())
 				.end()
