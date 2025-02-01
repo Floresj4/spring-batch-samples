@@ -14,6 +14,9 @@ Using a Spring BeanWrapperFieldSetMapper to convert flatfile data to a domain mo
 
 Launch a batch processing job from a http request.
 
+- [Spring dynamo](./spring-dynamo)
+
+Batch processing records in DynamoDB
 
 ### input-files
 
