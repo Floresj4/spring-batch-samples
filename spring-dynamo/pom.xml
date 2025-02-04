@@ -10,7 +10,7 @@
 	</parent>
 
 	<groupId>com.flores.dev</groupId>
-	<artifactId>spring-dynamo</artifactId>
+	<artifactId>dynamodb-writer</artifactId>
 
 	<properties>
 		<aws.java.sdk.version>2.27.21</aws.java.sdk.version>
