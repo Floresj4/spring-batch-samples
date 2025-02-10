@@ -2,6 +2,7 @@ package com.flores.dev.springbatch;
 
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
+import org.springframework.batch.core.annotation.AfterChunk;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
@@ -20,6 +21,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Configuration
 @EnableBatchProcessing
 public class BatchConfiguration {
@@ -30,7 +34,7 @@ public class BatchConfiguration {
 	@Autowired
 	private StepBuilderFactory stepBuilder;
 	
-	private int CHUNK_SIZE = 10;
+	private int CHUNK_SIZE = 3;
 
 	/**
 	 * Late bind the input file to initialize the reader.
@@ -64,13 +68,19 @@ public class BatchConfiguration {
 		return stepBuilder.get(STEP_NAME)
 				.<String, String>chunk(CHUNK_SIZE)
 				.reader(reader(null))	//value will be set via late-binding
+				.processor(processor())
 				.writer(writer(null))	//value will be set via late-binding
+				.listener(new AfterChunkListener())
 				.build();
 	}
-
+	
 	@Bean
+	@StepScope
 	public ItemProcessor<String, String> processor() {
-		return null;
+		return (p) -> {
+			log.info("\t" + p);
+			return p;
+		};
 	}
 	
 	@Bean
@@ -83,5 +93,14 @@ public class BatchConfiguration {
 				.resource(output)
 				.lineAggregator(new PassThroughLineAggregator<>())
 				.build();
+	}
+	
+	@Slf4j
+	public static class AfterChunkListener {
+
+		@AfterChunk
+		public void afterChunk() {
+			log.info("Chunk completed.");
+		}
 	}
 }

@@ -1,6 +1,6 @@
 # Spring Dynamo
 
-Batch processing records in DynamoDB
+Batch processing records into DynamoDB
 
 ### Execution
 

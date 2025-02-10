@@ -5,3 +5,4 @@ Using the Spring provided `BeanWrapperFieldSetMapper` and `JdbcBatchItemWriterBu
 ### Execution
 
 `java -jar bean-wrapper-jdbc-template.jar inputFile=../input-files/simple-names.csv`
+
