@@ -10,9 +10,10 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder(setterPrefix = "with")
+@Builder(toBuilder = true, setterPrefix = "with")
 public class WeightEntry {
 
+	private String guid;
 	private String date;
 	
 	private double value;
