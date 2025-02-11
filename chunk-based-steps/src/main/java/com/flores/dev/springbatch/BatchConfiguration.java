@@ -1,5 +1,7 @@
 package com.flores.dev.springbatch;
 
+import java.util.UUID;
+
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.annotation.AfterChunk;
@@ -102,5 +104,10 @@ public class BatchConfiguration {
 		public void afterChunk() {
 			log.info("Chunk completed.");
 		}
+	}
+	
+	
+	public static void main(String args[]) {
+		System.out.println(UUID.randomUUID().toString());
 	}
 }

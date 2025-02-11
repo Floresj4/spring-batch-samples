@@ -9,6 +9,7 @@ import org.springframework.batch.core.configuration.annotation.EnableBatchProces
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepScope;
+import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.ItemStreamReader;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.batch.item.file.builder.FlatFileItemReaderBuilder;
@@ -95,12 +96,21 @@ public class SpringDynamoConfig {
 	}
 
 	@Bean
+	@StepScope
+	public ItemProcessor<WeightEntry, WeightEntry> processor(@Value("#{jobParameters['guid']}") String guid) {
+		return (w) -> w.toBuilder()
+				.withGuid(guid)
+				.build();
+	}
+	
+	@Bean
 	public Step readWriteStep() throws URISyntaxException {
 		log.info("Initializing batch step");
 
 		return stepBuilder.get("ReadWriteStep")
 				.<WeightEntry, WeightEntry>chunk(10)
 				.reader(getReader(null))
+				.processor(processor(null))
 				.writer(getWriter(null, null))
 				.build();
 	}
