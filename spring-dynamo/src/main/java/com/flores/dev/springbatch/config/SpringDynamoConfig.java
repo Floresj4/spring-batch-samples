@@ -86,11 +86,9 @@ public class SpringDynamoConfig {
 	
 	@Bean
 	@StepScope
-	public ItemWriter<WeightEntry> getWriter(@Value("#{jobParameters['tableName']}") String tableName,
-			@Value("#{jobParameters['guid']}") String userGuid) throws URISyntaxException {
+	public ItemWriter<WeightEntry> getWriter(@Value("#{jobParameters['tableName']}") String tableName) throws URISyntaxException {
 		return DynamoDbWriter.builder()
 				.withDynamoDbClient(getDynamoDbClient())
-				.withUserGuid(userGuid)
 				.withTableName(tableName)
 				.build();
 	}
@@ -111,7 +109,7 @@ public class SpringDynamoConfig {
 				.<WeightEntry, WeightEntry>chunk(10)
 				.reader(getReader(null))
 				.processor(processor(null))
-				.writer(getWriter(null, null))
+				.writer(getWriter(null))
 				.build();
 	}
 	
