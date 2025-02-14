@@ -43,7 +43,6 @@ public class DynamoDbWriter implements ItemWriter<WeightEntry> {
 	public static final String ATTRIBUTE_VALUE = "value";
 	
 	private String tableName;
-	private String userGuid;
 
 	private boolean tableExists;
 	
@@ -61,7 +60,7 @@ public class DynamoDbWriter implements ItemWriter<WeightEntry> {
 			}
 		}
 		
-		BatchWriteItemRequest batchItemRequest = batchItemRequest(dynamoDbClient, tableName, items, userGuid);
+		BatchWriteItemRequest batchItemRequest = batchItemRequest(dynamoDbClient, tableName, items);
 		BatchWriteItemResponse batchItemResponse = dynamoDbClient.batchWriteItem(batchItemRequest);
 		List<ConsumedCapacity> consumedCapacity = batchItemResponse.consumedCapacity();
 
@@ -73,11 +72,11 @@ public class DynamoDbWriter implements ItemWriter<WeightEntry> {
 		log.info("BatchWriteItemRequest complete.  Consumed capacity: {}", capacity);
 	}
 	
-	public static Map<String, AttributeValue> getItemMap(String userGuid, WeightEntry entry) {
+	public static Map<String, AttributeValue> getItemMap(WeightEntry entry) {
 		Map<String, AttributeValue> item = new HashMap<>();
 
 		AttributeValue guid = AttributeValue.builder()
-				.s(userGuid)
+				.s(entry.getGuid())
 				.build();
 		
 		item.put(ATTRIBUTE_GUID, guid);
@@ -94,14 +93,14 @@ public class DynamoDbWriter implements ItemWriter<WeightEntry> {
 		return item;
 	}
 	
-	public static BatchWriteItemRequest batchItemRequest(DynamoDbClient client, String tableName, List<? extends WeightEntry> entries, String userGuid) {
+	public static BatchWriteItemRequest batchItemRequest(DynamoDbClient client, String tableName, List<? extends WeightEntry> entries) {
 		Map<String, List<WriteRequest>> requestItems = new HashMap<>();
 		
 		log.info("Attempting to add {} entries", entries.size());
 		
 		for(int i = 0; i < entries.size(); i++) {			
 			WeightEntry entry = entries.get(i);
-			Map<String, AttributeValue> item = getItemMap(userGuid, entry);
+			Map<String, AttributeValue> item = getItemMap(entry);
 			
 			List<WriteRequest> putItems = requestItems.getOrDefault(tableName, new ArrayList<>());
 			PutRequest put = PutRequest.builder()
