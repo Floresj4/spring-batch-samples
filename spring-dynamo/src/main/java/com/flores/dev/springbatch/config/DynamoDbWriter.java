@@ -192,8 +192,8 @@ public class DynamoDbWriter implements ItemWriter<WeightEntry> {
 				.attributeDefinitions(guidAttribute, dateAttribute)
 				.keySchema(partitionKey, sortKey)
 				.provisionedThroughput(ProvisionedThroughput.builder()
-						.readCapacityUnits(5L)
-						.writeCapacityUnits(5L)
+						.readCapacityUnits(10L)
+						.writeCapacityUnits(10L)
 						.build())
 				.tableName(tableName)
 				.build();	
